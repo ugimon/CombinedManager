@@ -1,0 +1,101 @@
+<script language="JavaScript">
+	function betting_exception(detail_sn, betting_position, betting_sn)
+	{
+		if(confirm("[적특] 처리하시겠습니까?"))
+		{
+			document.location = "/LiveGame/popup_betting_exception?betting_sn="+betting_sn+"&detail_sn="+detail_sn+"betting_position="+betting_position;
+		}
+	}
+</script>
+
+</head>
+
+<body>
+
+<div class="wrap">
+	<!--
+	<div id="search">
+		<form action="?" method="GET" name="form3" id="form3">
+			<input type="hidden" name="child_sn" value="{child_sn}">
+			<input type="hidden" name="select_no" value="{select_no}">
+			<div class="wrap">
+				<input type="hidden" name="mode" value="search">
+				<span>정렬</span>
+				<select name="page_size" onchange="submit()">
+					<option value="30"  {? perpage==30}  selected {/}>30</option>
+					<option value="50"  {? perpage==50}  selected {/}>50</option>
+					<option value="100" {? perpage==100} selected {/}>100</option>
+				</select>
+				<span>구분</span>
+				<select id="sel_result" name="sel_result" onchange="on_change()">
+					<option value="9">전체</option>
+					<option value="1" {? sel_result=="1"} selected {/}>당첨</option>
+					<option value="2" {? sel_result=="2"} selected {/}>낙첨</option>
+					<option value="0" {? sel_result=="0"} selected {/}>경기중</option>
+				</select>
+			</div>
+			
+			<div class="wrapRight">
+				<input type='hidden' name='mode' value='search'>
+				<span>검색</span>
+				<select name="select_keyword" onChange="onKeywordChange(this.form)">
+					<option value="" 	{? select_keyword==''}  selected {/}>전체</option>
+					<option value="uid" {? select_keyword=='uid'}  selected {/}>아이디</option>
+					<option value="nick"{? select_keyword=='nick'}  selected {/}>닉네임</option>
+					<option value="betting_no"{? select_keyword=='betting_no'}  selected {/}>배팅번호</option>
+				</select>
+				<input type="text" name="keyword" value={keyword}>
+				<input name="Submit4" type="submit"  value="검색" class="btnStyle3"/>
+			</div>
+		</form>
+	</div>
+	-->
+			
+  <form id="form1" name="form1" method="post" action="?act=delete_user">
+		<table border="0" cellspacing="1" class="tableStyle_gameList" summary="게임별 배팅현황">
+		<thead>
+			<tr>					
+				<th>배팅번호</th>
+				<th>아이디</th>
+				<th>닉네임</th>
+				<th>배팅금액</th>
+				<th>배당율</th>
+				<th>예상배당</th>
+				<th>게임결과</th>
+				<th>당첨금액</th>					
+				<th>배팅날짜</th>
+				<!--<th>배팅취소</th>-->
+				<th>배팅IP</th>
+			</tr>
+		</thead>
+		<tbody>
+		{@ list }
+			<tr class="gameGoing">
+				<td>{list.betting_no}</td>			    
+				<td><a href="javascript:open_window('/member/popup_detail?idx={list.member_sn}',1024,600)">{list.uid}</a></td>					
+				<td>{list.nick}</td>				    
+				<td>{=number_format(list.betting_money,0)}</td>
+				<td>{list.odd}</td>
+				<td>{=number_format(bcmul(list.betting_money,bcmul(list.odd,1,2),0),0)}</td>
+				<td>
+					{? list.betting_result=='WIN'}<font color=red>적  중</font>
+					{: list.betting_result=='LOS'}실  패
+					{: list.betting_result=='CANCEL'}적  특
+					{:}경기중
+					{/}
+				</td>
+				<td>{=number_format(list.prize,0)}</td>
+				<td>{list.reg_time}</td> 
+				<!--<td><input type="button" value="적특"  class="btnStyle3" onClick="betting_exception({detail_sn}, {betting_position},{list.betting_sn})"></td>-->
+				<td>{list.ip}</td>
+			</tr>
+		{/}	
+		</tbody>
+		</table>
+		
+			
+		<div id="pages">
+			{pagelist}
+		</div>
+	</form>
+</div>

@@ -1,0 +1,103 @@
+
+<div class="wrap">
+
+	<div id="route">
+		<h5>관리자 시스템 > 통계 > <b>배팅 통계</b></h5>
+	</div>
+
+	<h3>배팅 통계</h3>
+
+	<div id="search2">
+		<div>
+			<form action="?" method="GET" name="form2" id="form2">
+				<span class="icon">사이트</span>
+				<select name="filter_logo">
+					<option value=""  {? filter_logo==""}  selected {/}>전체</option>
+					<option value="totobang"  {? filter_logo=="totobang"}  selected {/}>킹덤</option>
+					<option value="orange" {? filter_logo=="orange"} selected {/}>미니</option>
+				</select>
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<span class="icon">배팅타입</span>
+				<select name="filter_category">
+					<option value=""  {? filter_category==""}  selected {/}>전체</option>
+					<option value="normal"  {? filter_category=="normal"}  selected {/}>조합배팅</option>
+					<option value="special" {? filter_category=="special"} selected {/}>스페셜</option>
+					<option value="live" {? filter_category=="live"} selected {/}>라이브</option>
+					<option value="soccer_live" {? filter_category=="soccer_live"} selected {/}>축구실시간</option>
+					<option value="ladder" {? filter_category=="ladder"} selected {/}>사다리</option>
+				</select>
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<span class="icon">리그</span>
+				<select name="filter_league">
+					<option value=""  {? filter_league==""}  selected {/}>전체</option>
+					{@league_list}
+					<option value="{league_list.sn}"  {? filter_league==league_list.sn}  selected {/}>{league_list.name}</option>
+					{/}
+				</select>
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<span class="icon">날짜</span><input name="begin_date" type="text" id="begin_date" class="date" value="{begin_date}" maxlength="20" onclick="new Calendar().show(this);" /> ~ 
+				<input name="end_date" type="text" id="end_date" class="date" value="{end_date}" maxlength="20" onclick="new Calendar().show(this);" />
+				<input name="Submit4" type="image" src="/img/btn_search.gif" class="imgType" title="검색" />
+			</form>
+		</div>
+	</div>
+
+	<form id="form1" name="form1" method="post" action="?act=delete_user" />
+	<table cellspacing="1" class="tableStyle_normal add" summary="배팅 통계" />
+	<legend class="blind">배팅 통계</legend>
+	<thead>
+		<tr>
+		  <th scope="col">날짜</th>
+		  <th scope="col">배팅총액</th>
+		  <th scope="col">배팅건수</th>
+		  <th scope="col">대기총액</th>
+		  <th scope="col">대기건수</th>
+		  <th scope="col">당첨총액</th>
+		  <th scope="col">당첨건수</th>
+		  <th scope="col">낙첨총액</th>
+		  <th scope="col">낙첨건수</th>
+		  <th scope="col">적특총액</th>
+		  <th scope="col">적특건수</th>
+		  <th scope="col">배팅수익</th>
+		</tr>
+	</thead>
+	<tbody>
+		{@ list}
+			<tr>
+				<td>{list.regdate}({list.date_name})</td>
+				<td><font color='#4374D9'>{=number_format(list.total_bet_money,0)}</font></td>
+				<td><font color='#4374D9'>{=number_format(list.total_bet_cnt,0)}</font></td>
+				<td>{=number_format(list["0"]["bet_money"],0)}</td>
+				<td>{=number_format(list["0"]["bet_cnt"],0)}</td>
+				<td><font color='#CC3D3D'>{=number_format(list["1"]["win_money"],0)}</font></td>
+				<td><font color='#CC3D3D'>{=number_format(list["1"]["win_cnt"],0)}</font></td>
+				<td><font color='#4374D9'>{=number_format(list["2"]["bet_money"],0)}</font></td>
+				<td><font color='#4374D9'>{=number_format(list["2"]["bet_cnt"],0)}</font></td>
+				<td><font color='#9FC93C'>{=number_format(list["4"]["win_money"],0)}</font></td>
+				<td><font color='#9FC93C'>{=number_format(list["4"]["win_cnt"],0)}</font></td>
+				<td>{? list.total_bet_money-list["1"]["win_money"]-list["4"]["win_money"]>0}<font color='#4374D9'>{:}<font color='#CC3D3D'>{/}
+					{=number_format(list.total_bet_money-list["1"]["win_money"]-list["4"]["win_money"],0)}</font>
+				</td>
+			 </tr>
+		{/}
+	</tbody>
+	<tfoot>
+		<tr>
+			<td>합계</td>
+			<td><font color='#4374D9'>{=number_format(totalList.total_bet_money,0)}</font></td>
+			<td><font color='#4374D9'>{=number_format(totalList.total_bet_cnt,0)}</font></td>
+			<td>{=number_format(totalList.total_bet_money_0,0)}</td>
+			<td>{=number_format(totalList.total_bet_cnt_0,0)}</td>
+			<td><font color='#CC3D3D'>{=number_format(totalList.total_win_money_1,0)}</font></td>
+			<td><font color='#CC3D3D'>{=number_format(totalList.total_win_cnt_1,0)}</font></td>
+			<td><font color='#4374D9'>{=number_format(totalList.total_lose_money,0)}</font></td>
+			<td><font color='#4374D9'>{=number_format(totalList.total_lose_cnt,0)}</font></td>
+			<td><font color='#9FC93C'>{=number_format(totalList.total_win_money_4,0)}</font></td>
+			<td><font color='#9FC93C'>{=number_format(totalList.total_win_cnt_4,0)}</font></td>
+			<td>{? totalList.total_win_money > 0}<font color='#4374D9'>{:}<font color='#CC3D3D'>{/}{=number_format(totalList.total_win_money,0)}</font></td>
+		</tr>
+	</tfoot>
+	</table>
+	</form>
+
+</div>

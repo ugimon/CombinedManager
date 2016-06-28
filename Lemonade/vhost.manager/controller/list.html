@@ -1,0 +1,161 @@
+<script>document.title = '총판관리-총판목록';</script>
+<script>
+	function go_del(url)
+	{
+		if(confirm("정말 삭제하시겠습니까?"))
+		{
+			document.location = url;
+		}
+		else 
+		{
+			return;
+		}
+	}
+	
+	function toggle(id)
+	{
+		$( "#"+id ).slideToggle(100);
+	}	
+	
+</script>
+
+<div class="wrap">
+
+	<div id="route">
+		<h5>관리자 시스템 > 총판 관리 > <b>총판 목록</b></h5>
+	</div>
+
+	<h3>총판 목록</h3>
+
+	<div id="search2">
+		<div>
+			<form action="?" method="GET" name="form2" id="form2">
+				<!-- 기간 검색 -->
+				<span class="icon">날짜</span><input name="begin_date" type="text" id="begin_date" class="date" value="{begin_date}" maxlength="25" onclick="new Calendar().show(this);" > ~ 
+				<input name="end_date" type="text" id="end_date" class="date" value="{end_date}" maxlength="25"  onclick="new Calendar().show(this);" >
+				<input name="Submit4" type="image" src="/img/btn_search.gif" class="imgType" title="검색" />
+			</form>
+		</div>
+	</div>
+
+
+	<form id="form1" name="form1" method="post" action="?act=delete_user">
+	<table cellspacing="1" class="tableStyle_members" summary="총판 목록">
+	<legend class="blind">총판 목록</legend>
+	<thead>
+		<tr>
+			<th scope="col">사이트</th>
+			<th scope="col">아이디</th>
+			<th scope="col">이름</th>
+			<th scope="col">회원수</th>
+			<th scope="col">입금회원</th>
+			<th scope="col">입금금액</th>
+			<th scope="col">출금금액</th>
+			<th scope="col">정산액</th>
+			<th scope="col">낙첨수수료</th>
+			<th scope="col">하부총판회원</th>
+			<th scope="col">하부총판정산액</th>
+			<th scope="col">하부총판낙첨수수료</th>
+			<th scope="col">총 정산액</th>
+			
+			<th scope="col">웹게임<br>배팅포인트</th>
+			<th scope="col">스포츠<br>배팅포인트</th>
+			<th scope="col">상태</th>
+			<th scope="col">하부웹게임<br>배팅포인트</th>
+			<th scope="col">하부스포츠<br>배팅포인트</th>
+			<!-- <th scope="col">가입날자</th> -->
+			<th scope="col">처리</th>
+		</tr>
+	</thead>
+	<tbody>
+		{@ list}
+			<tr>
+				<td>{? .logo=='totobang'}조커{: .logo=='orange'}미니{: .logo=='apple'}스타{/}</td>
+				<td><a href="javascript:open_window('/partner/memberDetails?idx={.Idx}',640,440)">{.rec_id}</td>
+				<td><a href="javascript:open_window('/partner/popup_partner_member_list?partner_sn={.Idx}&partner_name={.rec_name}',1000,700)">{.rec_name}</a></td>
+				
+				<!-- 토글을 쓸 경우 <td onclick="toggle('d_{list.Idx}')">{.member_count}</td> -->
+				<td><a href="javascript:open_window('/partner/popup_partner_member_list?partner_sn={.Idx}&partner_name={.rec_name}',1000,700)">{.member_count}</a></td>
+				<td>{.charge_count}</td>
+				<td>{=number_format(.charge_sum,0)}</td>
+				<td>{=number_format(.exchange_sum,0)}</td>
+				<td>{=number_format(.rec_account,0)}</td>
+				<td>{=number_format(.rec_nc_account,0)}</td>
+				<td>{.child_member_count}</td>
+				<td>{=number_format(.child_rec_account,0)}</td>
+				<td>{=number_format(.child_rec_nc_account,0)}</td>
+				<td>{=number_format(.total_rec_account,0)}</td>
+
+
+				<td>{=number_format(.rec_wb_account,0)}</td>
+				<td>{=number_format(.rec_sb_account,0)}</td>
+				<td>
+					{? .status==0}<font color='red'>정지</font>
+					{: .status==1}정상
+					{: .status==2}신청
+					{/}
+				</td>
+				<td>{=number_format(.child_rec_wb_account,0)}</td>
+				<td>{=number_format(.child_rec_sb_account,0)}</td>
+				<!-- <td>{.reg_date}</td> -->
+				<td>
+					{? list.status==1}<a href='?act=stop&id={list.rec_id}&send=0'><img src='/img/btn_s_stop.gif' title='정지'></a>						
+					{:}<a href='?act=stop&id={list.rec_id}&send=1'><img src='/img/btn_s_normal.gif' title='정상'></a>
+					{/}&nbsp;<a href="javascript:void(0)" onclick="go_del('?act=del&id={list.rec_id}');return false;"><img src="/img/btn_s_del.gif" title="삭제"></a>&nbsp;
+						<a href="javascript:void(0);" onclick="open_window('/partner/memoadd_acc?toid={list.rec_id}',650,450)"><img src="/img/btn_s_memo.gif" title="메모"></a>
+				</td>
+			</tr>			
+			
+			<tr id="d_{list.Idx}" style="display:none;" class="gameDetail">
+				<td colspan="19">					
+					<table cellspacing="1" id="d_{list.Idx}">
+						<tr bgcolor="#ade8a0">				  
+							<th>ID</th>
+							<th>닉네임</th>
+							<th>보유금액</th>						
+							<th>회원등급</th>
+							<th>가입일</th>
+							<th>가입IP</th>
+							<th>상태</th>
+							<th>입금</th>
+							<th>출금</th>
+							<th>배팅</th>
+						</tr>
+						{@ item }														
+						<tr bgcolor="#ede8e8">				
+							<td>{..uid}</td>
+							<td>{..nick}</td>
+							<td>{=number_format(..g_money,0)}원</td>
+							<td>{arr_mem_lev[..mem_lev]}</td>
+							<td>{..regdate}</td>
+							<td>{..mem_ip}</td>
+							<td>
+								{? ..mem_status == 'N'}정상
+								{: ..mem_status == 'S'}정지
+								{: ..mem_status == 'B'}불량
+								{: ..mem_status == 'W'}신규
+								{: ..mem_status == 'D'}탈퇴
+								{/}
+							</td>
+							<td>{=number_format(..charge_money,0)}원</td>
+							<td>{=number_format(..exchange_money,0)}원</td>
+							<td>{=number_format(..bet_money,0)}원</td>
+						</tr>															
+						{/}
+					</table>				
+				</td>
+			</tr>			
+		{/}
+	
+	</tbody>
+	</table>
+</form>
+	<div id="pages">
+		{pagelist}
+	</div>
+
+	<div id="wrap_btn">
+  	<input type="submit" name="del_Submit" value="총판 등록" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'"  onmouseout="this.className='Qishi_submit_a'" onclick="javascript:window.open('/partner/popup_join','memo','width=650,height=350')"/>
+  </div>
+
+</div>

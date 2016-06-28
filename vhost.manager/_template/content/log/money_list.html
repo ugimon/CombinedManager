@@ -1,0 +1,118 @@
+<script>document.title = '입출금 관리-머니내역';</script>
+
+<div class="wrap" id="Richer">
+
+	<div id="route">
+		<h5>관리자 시스템 > 입출금 관리 > <b>머니내역</b></h5>
+	</div>
+
+	<h3>머니 내역</h3>
+
+	<ul id="tab">
+		<li><a href="/log/moneyloglist" id="Richer">머니 내역</a></li>
+		<li><a href="/log/mileageloglist" id="Richer_over">마일리지 내역</a></li>
+	</ul>
+
+	<div id="search">
+		<div class="wrap">
+			<form action="?" method="GET" name="form2" id="form2">
+				<span class="icon">사이트</span>
+					<select name="filter_logo">
+						<option value=""  {? filter_logo==""}  selected {/}>전체</option>
+						{@ logolist}
+						<option value={.name} {? filter_logo==.name} selected {/}>{.nick}</option>
+						{/}
+					</select>
+				&nbsp;&nbsp;&nbsp;
+				<span class="icon">출력</span>
+				<input name="perpage" type="text" id="perpage"  class="sortInput" onkeyup="if(event.keyCode !=37 && event.keyCode != 39) value=value.replace(/\D/g,'');" maxlength="3" size="5" value="{perpage}" onmouseover="this.focus()">
+				&nbsp;&nbsp;&nbsp;
+				<!-- 기간 필터 -->
+				<span class="icon">날짜</span><input name="begin_date" type="text" id="begin_date" class="date" value="{begin_date}" maxlength="20" onclick="new Calendar().show(this);"/>&nbsp;~
+				<input name="end_date" type="text" id="end_date" class="date" value="{end_date}" maxlength="20" onclick="new Calendar().show(this);" />
+
+				<!-- 총판 필터 -->
+				<select name="filter_partner_sn">
+					<option value="" {? filter_partner_sn==""} selected {/}>총판</option>
+					{@ partner_list}
+						<option value={.Idx} {? filter_partner_sn==.Idx} selected {/}>{.rec_id}</option>
+					{/}
+				</select>
+
+				<!-- 키워드 검색 -->
+				<select name="field">
+					<option value="uid" {? field=="uid"} 	selected {/}>아이디</option>
+					<option value="nick"   {? field=="nick"} 	selected {/}>닉네임</option>
+					<option value="bank_owner" {? field=="bank_owner"} 	selected {/}>예금주</option>
+				</select>
+				<input name="keyword" type="text" id="key" class="name" value="{keyword}" maxlength="20" onmouseover="this.focus()"/>
+
+				<!-- 상태 검색 -->
+				<select name="filter_state">
+					<option value="" 	{? filter_state==""} selected {/}>::머니 발생사유</option>
+					<option value="1" {? filter_state==1} selected {/}>(+) 충전</option>
+					<option value="2" {? filter_state==2} selected {/}>(-) 환전</option>
+					<option value="3" {? filter_state==3} selected {/}>(-) 배팅</option>
+					<option value="4" {? filter_state==4} selected {/}>(+) 당첨</option>
+					<option value="5" {? filter_state==5} selected {/}>배팅취소</option>
+					<option value="6" {? filter_state==6} selected {/}>(-) 포인트 전환</option>
+					<option value="7" {? filter_state==7} selected {/}>관리자 강제 변환 머니</option>
+					<option value="8" {? filter_state==8} selected {/}>정산취소</option>
+					<option value="10" {? filter_state==10} selected {/}>맞고</option>
+					<option value="13" {? filter_state==13} selected {/}>(-) 마일리지 전환</option>
+				</select>
+
+				<!-- 검색버튼 -->
+				<input name="Submit4" type="image" src="/img/btn_search.gif" class="imgType" />
+			</form>
+		</div>
+	</div>
+
+	<form id="form1" name="form1" method="post" action="?act=del">
+		<table cellspacing="1" class="tableStyle_normal">
+			<legend class="blind">머니 내역</legend>
+			<thead>
+			<tr>
+				  <th scope="col">일시</th>
+				  <th scope="col" class="id">아이디</th>
+				  <th scope="col">닉네임</th>
+				  <th scope="col">예금주</th>
+				  <th scope="col">총판</th>
+				  <th scope="col">당시금액</th>
+				  <th scope="col">변동금액</th>
+				  <th scope="col">최종금액</th>
+				  <th scope="col">사유</th>
+				  <th scope="col">충전횟수</th>
+				  <th scope="col">비고</th>
+			</tr>
+			</thead>
+			<tbody>
+			{@ list}
+				<tr class="link_lan" style="padding-left:1px;"  onMouseOver="this.style.backgroundColor='#e0eafe';" onMouseOut="this.style.backgroundColor=''">
+					<td>{list.log_regdate}</td>
+					<td><a href="javascript:open_window('/member/popup_detail?idx={list.member_sn}',1024,600)">{.uid}</td>
+					<td>{list.nick}</td>
+					<td>{list.bank_member}</td>
+					<td>{list.rec_id}</td>
+
+					<td>{=number_format(list.before_money,0)}</td>
+					<td>
+						{? list.amount < 0}<font color='red'>{=number_format(list.amount,0)}</font>
+						{:}<font color='blue'>{=number_format(list.amount,0)}</font>
+						{/}
+					</td>
+					<td>{=number_format(list.after_money,0)}</td>
+
+					<td>{list.status_message}</td>
+					<td>{list.charge_cnt}</td>
+					<td>{list.log_memo}</td>
+				</tr>
+			{/}
+			</tbody>
+		</table>
+	</form>
+
+	<div id="pages">
+		{pagelist}
+	</div>
+</div>

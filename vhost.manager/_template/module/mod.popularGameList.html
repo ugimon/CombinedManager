@@ -1,0 +1,67 @@
+
+						
+								{@ popularGameList}
+								
+								<form id="popular_form_{popularGameList.idx}">
+									<span style="display:none">
+										<input id="param_{popularGameList.idx}" type="hidden" value="{popularGameList.idx}" game_type="{popularGameList.betType}" lnum="{popularGameList.gameIndex}"
+											home_team="{popularGameList.homeTeam}" home_rate="{popularGameList.homeRate}" draw_rate="{popularGameList.drawRate}" away_team="{popularGameList.awayTeam}"
+											away_rate="{popularGameList.awayRate}" >
+									</span>
+									
+									<tr>
+										<td nowrap>{popularGameList.gameDate}</td>
+
+										<td>
+											<p class="league">
+												<img src="upload/league/{popularGameList.leagueImage}">
+												{? mb_strlen(popularGameList.league, 'utf-8')<=10}
+													<span class="text">{popularGameList.league}</span>
+												{:}
+													<marquee class="text" scrollamount="2">{popularGameList.league}</marquee>
+												{/}
+											</p>
+										</td>
+										
+										<!-- homeTeam -->
+										<td class="home" onClick=onPopularTeamSelected('{popularGameList.idx}','0');return false;>
+											<div class="home">
+												<span class="name">{popularGameList.homeTeam}</span>
+												<span class="icon_handicap">{? popularGameList.betType==4}<img src='/img/icon_up.gif'>{/}</span>
+												<span class="rate">{popularGameList.homeRate}</span>
+											</div>
+											<input type='checkbox' value='1' style='display:none;'>
+										</td>
+
+										<!-- drawTeam -->
+										<td onClick=onPopularTeamSelected("{popularGameList.idx}",'1');return false>
+										{? popularGameList.betType==1}
+											{? popularGameList.drawRate=='1.00'}
+												<b>vs</b><input type='hidden'>
+											{:}
+											<div class='draw'>
+												<span class="rate">{popularGameList.drawRate}</span>
+											</div>
+											{/}
+										{:}
+										<!-- awayTeam -->
+											<div class="draw_no"><span>{popularGameList.drawRate}</span></div>
+										{/}
+											<input type='checkbox' value='3' style='display:none;'>
+										</td>
+
+										<td class="away" onclick=onPopularTeamSelected('{popularGameList.idx}','2');return false;>
+											<div class="away">
+												<span class="name">{popularGameList.awayTeam}</span>
+												<span class="icon_handicap">{? popularGameList.betType==4}<img src='/img/icon_down.gif'>{/}</span>
+												<span class="rate">{popularGameList.awayRate}</span>
+											</div>
+											<input type='checkbox' value='2' style='display:none;'>
+										</td>
+									</tr>
+									<tr>
+										<td class="vs" colspan="5"><p class="awayRate{popularGameList.star}"></p></td>
+									</tr>
+								</form>
+								{/}
+						

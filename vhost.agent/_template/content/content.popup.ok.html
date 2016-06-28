@@ -1,0 +1,109 @@
+<?php
+	include_once("../include/common.php");
+	include_once("../class/upload.php");
+	$upload_file=$_FILES['P_FILE']['tmp_name'];//接收上传文件的临时目录
+	$upload_file_name=$_FILES['P_FILE']['name'];//接收上传文件的真实名字
+	$PopupDir = $config_upload_root ."/popup/";
+	$act = $_REQUEST["act"];
+	$idx = $_REQUEST["idx"];
+	if($act==""){
+		$act="add";
+	}
+	$P_SUBJECT 			= $_REQUEST["P_SUBJECT"];				/// 제목
+	$P_POPUP_U 			= $_REQUEST["P_POPUP_U"];				/// 팝업 사용유무
+	$P_STARTDAY 		= $_REQUEST["P_STARTDAY"];			/// 시작일 
+	$P_ENDDAY 			= $_REQUEST["P_ENDDAY"];				/// 마감일
+	$P_WIN_WIDTH 	= $_REQUEST["P_WIN_WIDTH"];			/// 팝업창 가로 사이즈
+	$P_WIN_HEIGHT 	= $_REQUEST["P_WIN_HEIGHT"];		/// 팝업창 세로 사이지
+	$P_WIN_LEFT 		= $_REQUEST["P_WIN_LEFT"];			/// 팝업 위치
+	$P_WIN_TOP 		= $_REQUEST["P_WIN_TOP"];				/// 팝업 위치
+	$P_STYLE 				= $_REQUEST["P_STYLE"];					/// 바디 스타일 이미지 통 또는 html
+	$P_MOVEURL 			= $_REQUEST["P_MOVEURL"];				/// 이미지 통일 경우 클릭시 이동할 주소
+	$P_CONTENT 		= $_REQUEST["P_CONTENT"];				/// Html 내용
+	
+	/*+++++++++++++++++++++++++++++++++++++++++++++++++
+	+ 要是没有值就设定0
+	+++++++++++++++++++++++++++++++++++++++++++++++++*/
+	if ($P_WIN_WIDTH == ""){ $P_WIN_WIDTH = 0;}
+	if ($P_WIN_HEIGHT == ""){ $P_WIN_HEIGHT = 0;}
+	if ($P_WIN_LEFT == ""){ $P_WIN_LEFT = 0;}
+	if ($P_WIN_TOP == "") { $P_WIN_TOP = 0;}
+	
+	/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	+ $act=edit 的时候时候，导出原来的文件名路径
+	++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+	if ($act == "edit"){
+		$db->mysql="select * from ".$db_qz."POPUP where logo='".$logo."' and IDX = '".$idx."'";
+		$db->getresule();
+		if($db->getrow()){
+			if($upload_file_name==""){
+				if ($db->row["P_FILE"] != ""){
+					$edit_fileName = $db->row["P_FILE"];
+				}else{
+					$edit_fileName = "";
+				}
+			}
+		}
+	}
+
+	/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	+ 첨부파일 체크및 업로드
+	++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+	if($upload_file){
+		$ph_path="../../user/upload/popup/";
+		$up=new upphoto;//类的实例化
+		$up->ph_path=$ph_path;
+		$up->get_ph_tmpname($_FILES['P_FILE']['tmp_name']);//获取上传临时文件名
+		$up->get_ph_type($_FILES['P_FILE']['type']); //获取文件类型
+		$up->get_ph_size($_FILES['P_FILE']['size']); //获取文件大小
+		$up->get_ph_name($_FILES['P_FILE']['name']); //获取文件名称
+		$up->save();
+		$imgsrc=substr($up->ph_name,24);
+	}
+
+	if($act=="add"){
+		$SQL = "INSERT INTO ".$db_qz."POPUP (P_SUBJECT,P_CONTENT,P_POPUP_U,P_WRITEDAY,P_STARTDAY,P_ENDDAY,P_WIN_WIDTH,P_WIN_HEIGHT,P_WIN_LEFT,P_WIN_TOP,P_MOVEURL,P_FILE,P_STYLE,logo) VALUES   ('".$P_SUBJECT."','".$P_CONTENT."','".$P_POPUP_U."',now(),'".$P_STARTDAY."','".$P_ENDDAY."','".$P_WIN_WIDTH."','".$P_WIN_HEIGHT."','".$P_WIN_LEFT."','".$P_WIN_TOP."','".$P_MOVEURL."','".$imgsrc."','".$P_STYLE."','".$logo."')";
+		
+		$db->mysql=$SQL;
+		$db->getresule();
+	}
+	if($act=="edit"){
+		if($imgsrc==""){
+			$temp=$edit_fileName;
+		}else{
+			$temp=$upload_file_name;
+		}
+		$sql="select P_FILE from ".$db_qz."popup where logo='".$logo."' and IDX=".$idx."";
+		$db->mysql=$sql;
+		$db->getresule();
+		if($db->getrow())
+		{
+			$file=$db->row["P_FILE"];
+			if(file_exists("../../user/upload/popup/".$file))
+			{
+				unlink("../../user/upload/popup/".$file);
+			}
+		}
+	
+		$SQL = "UPDATE ".$db_qz."POPUP SET P_SUBJECT = '".$P_SUBJECT."',";
+		$SQL = $SQL." P_CONTENT = '".$P_CONTENT."',";
+		$SQL = $SQL." P_POPUP_U= '".$P_POPUP_U."',";
+		$SQL = $SQL." P_STARTDAY='".$P_STARTDAY."',";
+		$SQL = $SQL." P_ENDDAY='".$P_ENDDAY."',";
+		$SQL = $SQL." P_WIN_WIDTH='".$P_WIN_WIDTH."',";
+		$SQL = $SQL." P_WIN_HEIGHT='".$P_WIN_HEIGHT."',";
+		$SQL = $SQL." P_WIN_LEFT='".$P_WIN_LEFT."',";
+		$SQL = $SQL." P_WIN_TOP='".$P_WIN_TOP."',";
+		$SQL = $SQL." P_MOVEURL='".$P_MOVEURL."',";
+		$SQL = $SQL." P_FILE='".$imgsrc."',";
+		$SQL = $SQL." P_STYLE = '".$P_STYLE."' WHERE logo='".$logo."' and IDX = ".$idx."";
+		
+		$db->mysql=$SQL;
+		$db->getresule();
+	}
+	$db->dbclose();
+	//echo $SQL;
+	echo "<script>alert('처리되었습니다.');</script>";
+	echo "<META HTTP-EQUIV='Refresh' CONTENT='0;URL=popup.php'>";
+	exit;
+?>

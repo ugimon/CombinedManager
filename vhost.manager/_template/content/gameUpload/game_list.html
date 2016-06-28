@@ -1,0 +1,360 @@
+<script>
+	function select_delete()
+	{
+		var child_sn="";
+		var sn = document.getElementsByName("child_sn[]");
+		
+		for(i=0;i<sn.length;i++)   
+		{   
+			if(sn[i].checked==true)
+			{
+				if($('#state_'+sn[i].value).val()!=-1)
+				{
+					alert("대기중인 게임만 삭제가능합니다.");
+					return;
+				}
+				child_sn += sn[i].value+"\,";   
+			}   
+		}
+		if(child_sn.length>0)
+		{
+			child_sn=child_sn.substring(0,(child_sn.length)-1);
+			param="child_sn="+child_sn+"&act=delete_game&state={state}&game_type={gameType}&categoryName={categoryName}&special_type={special_type}&perpage={perpage}&begin_date={begin_date}&end_date={end_date}&filter_team_type={filter_team_type}&filter_team={filter_team}&money_option={money_option}";
+			document.location="/gameUpload/gamelist?"+param;
+		}
+		else
+		{
+			alert("경기를 선택!");
+			return;
+		}
+	}
+	
+	function select_modify_state()
+	{
+		var child_sn="";
+		var sn = document.getElementsByName("child_sn[]");
+		for(i=0;i<sn.length;i++)   
+		{   
+			if(sn[i].checked==true)
+		  {
+		  	if($('#state_'+sn[i].value).val()!=-1 && $('#state_'+sn[i].value).val()!=0)
+		  	{
+		  		alert("완료된 게임은 상태변경이 불가합니다.");
+					return;
+		  	}
+		  	child_sn += sn[i].value+"\,";
+		  }   
+		}
+	
+		if(child_sn.length>0)
+		{
+			state=$('#select_state').val();
+			child_sn=child_sn.substring(0,(child_sn.length)-1);  				
+		
+			param="child_sn="+child_sn+"&new_state="+state+"&act=modify_state&state={state}&game_type={gameType}&categoryName={categoryName}&special_type={special_type}&perpage={perpage}&begin_date={begin_date}&end_date={end_date}&filter_team_type={filter_team_type}&filter_team={filter_team}&money_option={money_option}";
+			document.location="/gameUpload/gamelist?"+param;
+		}
+		else
+		{
+			alert("경기를 선택!");
+			return;
+		}
+	}
+	
+	function select_all()
+	{	
+		var check_state = document.form1.check_all.checked;
+		for (i=0;i<document.all.length;i++) 
+		{
+			if (document.all[i].name=="child_sn[]") 
+			{
+				document.all[i].checked = check_state;
+			}
+		}
+	}
+	
+	function team_betting(url)
+	{
+		window.open(url,'','resizable=no width=520 height=210');
+		
+	}
+	function team_betting2(url)
+	{
+		window.open(url,'','resizable=no width=520 height=240');
+	}
+	function onDelete(child_sn)
+	{
+		if(confirm("정말 삭제하시겠습니까?  "))
+		{
+			param="child_sn="+child_sn+"&act=delete_game&state={state}&game_type={gameType}&categoryName={categoryName}&special_type={special_type}&perpage={perpage}&begin_date={begin_date}&end_date={end_date}&filter_team_type={filter_team_type}&filter_team={filter_team}&money_option={money_option}";
+			document.location="/gameUpload/gamelist?"+param;
+		}
+		else
+		{
+			return;
+		}
+	}
+	function go_rollback(url)
+	{
+		if(confirm("게임결과와 배당지급이 취소됩니다. 진행하시겠습니까?  "))
+		{
+			param="act=delete_game&state={state}&game_type={gameType}&categoryName={categoryName}&special_type={special_type}&perpage={perpage}&begin_date={begin_date}&end_date={end_date}&filter_team_type={filter_team_type}&filter_team={filter_team}&money_option={money_option}&page={page}";
+			document.location = url+"&"+param;
+		}
+		else
+		{
+			return;
+		}
+	}
+	
+	function onCheckbox(frm)
+	{
+		if(frm.money_option.checked==true)
+		{
+			frm.money_option.value=1
+		}
+		else
+			frm.money_option.value=0
+		frm.submit();
+	}
+	
+	function onStateChange(child_sn)
+	{
+		state=$('#state_'+child_sn).val();
+		param="child_sn="+child_sn+"&new_state="+state+"&act=modify_state&state={state}&game_type={gameType}&categoryName={categoryName}&special_type={special_type}&perpage={perpage}&begin_date={begin_date}&end_date={end_date}&filter_team_type={filter_team_type}&filter_team={filter_team}&money_option={money_option}";
+		document.location="/gameUpload/gamelist?"+param;
+	}
+	
+	function onDeadLine(child_sn)
+	{
+		if(confirm("게임시간을 변경 하시겠습니까?"))
+		{
+			param="child_sn="+child_sn+"&act=deadline_game&state={state}&game_type={gameType}&categoryName={categoryName}&special_type={special_type}&perpage={perpage}&begin_date={begin_date}&end_date={end_date}&filter_team_type={filter_team_type}&filter_team={filter_team}&money_option={money_option}&page={page}";
+			document.location="/gameUpload/gamelist?"+param;
+		}
+		else
+		{
+			return;
+		}
+	}
+</script>
+</head>
+
+	<div id="route">
+		<h5>관리자 시스템 - 항목 보기</h5>
+	</div>
+	<h3>항목 보기</h3>
+
+	<div id="search">
+		<div class="betList_option">
+			<form action="?act=user" method="post" name="form3" id="form3">
+				<input type="button" value="-경기등록-" class="Qishi_submit_a" onclick="window.open('/gameUpload/popup_gameupload','','resizable=yes scrollbars=yes top=5 left=5 width=1600 height=650')";>
+			</form>
+			<form action="?mode=execl_collect" method="post" name="form4" id="form4">
+				<input type="button" value="-Excel-수집-" class="Qishi_submit_a" onclick="window.open('/gameUpload/popup_excelupload','','resizable=yes scrollbars=yes top=5 left=5 width=1100 height=650')";>
+			</form>
+			<form action="?mode=collect" method="post" name="form5" id="form5">
+				<input type="button" value="-7m-수집-" class="Qishi_submit_a" onclick="window.open('/gameUpload/collect7m','','resizable=yes scrollbars=yes top=5 left=5 width=1100 height=650')";>
+			</form>
+			<input type="button" value="-게임복사-" class="Qishi_submit_a" onclick="window.open('/gameUpload/game_copy_list','','resizable=yes scrollbars=yes top=5 left=5 width=1100 height=650')";>
+		</div>
+		
+		<div class="wrap_search">
+			<form name=frmSrh method=post action="/gameUpload/gamelist"> 
+			<input type="hidden" name="search" value="search">				
+			<input type="hidden" name="category_name" value="">
+			
+			<span>출력</span>
+			<input name="perpage" type="text" id="perpage"  class="sortInput" onkeyup="if(event.keyCode !=37 && event.keyCode != 39) value=value.replace(/\D/g,'');" maxlength="3" size="5" value="{perpage}" onmouseover="this.focus()">
+
+			<span>설정</span>
+			<input type="radio" name="state" value=0 {? state==0}checked{/} class="radio">전체
+			<input type="radio" name="state" value=1 {? state==1}checked{/} class="radio">종료
+			<input type="radio" name="state" value=20 {? state==20}checked{/} class="radio">발매(배팅가능)
+			<input type="radio" name="state" value=21 {? state==21}checked{/} class="radio">발매(배팅마감)
+			<input type="radio" name="state" value=3 {? state==3}checked{/} class="radio">대기
+			&nbsp;
+			
+			<select name="special_type">
+				<option value="">대분류</option>
+				<option value="1" {? special_type==1} selected {/}>일반</option>
+				<option value="2" {? special_type==2} selected {/}>스페셜</option>
+				<option value="4" {? special_type==4} selected {/}>멀티</option>
+				<option value="5" {? special_type==5} selected {/}>사다리</option>
+				<option value="6" {? special_type==6} selected {/}>파워볼</option>
+				<option value="7" {? special_type==7} selected {/}>달팽이</option>
+				<option value="8" {? special_type==8} selected {/}>다리다리</option>
+			</select>
+			
+			<select name="game_type">
+				<option value="">종류</option>
+				<option value="1" {? gameType==1} selected {/}>승무패</option>
+				<option value="2" {? gameType==2} selected {/}>핸디캡</option>
+				<option value="4" {? gameType==4} selected {/}>언더오버</option>
+			</select>
+			
+			<select name="categoryName">
+				<option value="">종목</option>
+				{@ categoryList}
+					<option value="{.name}" {? categoryName==.name} selected {/}>{.name}</option>
+				{/}
+			</select>
+			
+			<!-- 기간 필터 -->
+			<span class="icon">날짜</span><input name="begin_date" type="text" id="begin_date" class="date" value="{begin_date}" maxlength="20" onclick="new Calendar().show(this);"/>&nbsp;~
+			<input name="end_date" type="text" id="end_date" class="date" value="{end_date}" maxlength="20" onclick="new Calendar().show(this);" />
+				
+			<!-- 팀검색, 리그검색 -->
+			<select name="filter_team_type">
+				<option value="home_team" {? filter_team_type=="home_team"} selected{/}>홈팀</option>
+				<option value="away_team" {? filter_team_type=="away_team"} selected{/}>원정팀</option>
+				<option value="league" 		{? filter_team_type=="league"} selected{/}>리그명</option>
+			</select>
+			<input type="text" size="10" name="filter_team" value="{filter_team}" class="name">
+			<!-- 검색버튼 -->
+			<input name="Submit4" type="image" src="/img/btn_search.gif" class="imgType" title="검색" />
+			&nbsp;&nbsp;
+			<!--<input type="checkbox" name="money_option" value="" {? money_option==1}checked{/} onClick="onCheckbox(this.form)" class="radio"><font color='red'>배팅금액 0↑</font>-->
+			<span class="rightSort">
+				<span>선택 항목을</span>
+				<select name="select_state" id="select_state">
+					<option value=0  {? select_state==0}  selected {/}>발매</option>
+					<option value=-1 {? select_state==-1} selected {/}>대기</option>
+				</select>
+				<input type="button" value="선택상태변경" onclick="select_modify_state();" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'" onmouseout="this.className='Qishi_submit_a'">
+				<input type="button" value="선택삭제" onclick="select_delete();" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'" onmouseout="this.className='Qishi_submit_a'">
+			</span>
+			</form>
+		</div>
+	</div>
+	
+	<form id="form1" name="form1" method="post" action="?">
+  	<input type="hidden" name="act" value="delete">
+		<table cellspacing="1" class="tableStyle_gameList">
+		<legend class="blind">항목보기</legend>
+			<thead>
+	    		<tr>     
+	      	<th><input type="checkbox" name="check_all" onClick="select_all()"/> No</th>
+					<th>경기일시</th>
+					<th>대분류</th>
+					<th>종류</th>
+					<th>종목</th>
+					<th>리그</th>
+					<th colspan="2">승(홈팀)</th>
+					<th>무</th>
+					<th colspan="2">패(원정팀)</th>
+					<th>스코어</th>
+					<th>이긴 팀</th>
+					<th>진행상태</th>
+					<th>배당관리</th>
+					<th>처리</th>
+	    		</tr>
+	 		</thead>
+			<tbody>
+	 			{@ list}
+					{? is_null(list.kubun)}
+						<tr>
+					{: list.kubun == 0}
+		 				<tr class="gameGoing">	
+		 			{: list.kubun == 1}		
+		 				<tr class="gameEnd">
+		 			{/ }
+						<td><input type='checkbox' name='child_sn[]' id='child_sn' value='{list.child_sn}'><font color='blue'> {list.child_sn}</font></td>
+						<td>{=sprintf("%s %s:%s", substr(list.gameDate,5), list.gameHour, list.gameTime)}</td>
+						<td>
+							{? list.special==0}일반
+							{: list.special==1}스페셜
+							{: list.special==2}멀티
+							{: list.special==5}사다리
+							{: list.special==6}파워볼
+							{: list.special==7}달팽이
+							{: list.special==8}다리다리
+							{/}
+						</td>
+						<td>
+							{? list.type==1}<span class="victory">승무패{?.special==1}(스페셜){:.special==2}(멀티){:.special==3}(고액){/}</span>
+						  {: list.type==2}<span class="handicap">핸디캡{?.special==1}(스페셜){:.special==2}(멀티){:.special==3}(고액){/}</span>
+						  {: list.type==4}<span class="underover">언더오버{?.special==1}(스페셜){:.special==2}(멀티){:.special==3}(고액){/}</span>
+						  {/}
+						</td>
+						<td>{list.sport_name}</td>
+						<td>{list.league_name}</td>
+						<td>
+							
+							{? list.total_betting > 0}
+						  	<font color="blue">
+						  		<a href=javascript:team_betting2("/gameUpload/popup_gamedetail?child_sn={list.child_sn}"); style='cursor:hand' onmousemove="showpup('{list.home_team}&nbsp;&nbsp;VS&nbsp;&nbsp;{list.away_team}')" onmouseout='hidepup()'>
+						  			<b>{=mb_strimwidth(list.home_team, 0, 20, "..", "utf-8")}</b>
+						  		</a>
+						  	</font>
+						  {:}
+						  	<a href=javascript:team_betting2('/gameUpload/popup_gamedetail?child_sn={list.child_sn}'); style='cursor:hand' onmousemove="showpup('{list.home_team}&nbsp;&nbsp;VS&nbsp;&nbsp;{list.away_team}')" onmouseout='hidepup()'>
+						  		{=mb_strimwidth(list.home_team, 0, 20, "..", "utf-8")}
+							</a>
+						  {/}
+						  
+						  <!--
+						  <a href=javascript:team_betting2('/gameUpload/popup_gamedetail?child_sn={list.child_sn}'); style='cursor:hand' onmousemove="showpup('{list.home_team}&nbsp;&nbsp;VS&nbsp;&nbsp;{list.away_team}')" onmouseout='hidepup()'>
+						  		{=mb_strimwidth(list.home_team, 0, 20, "..", "utf-8")}
+						  		-->
+						</td>
+						<td>{=number_format(list.home_rate, 2)}</td>
+						<td>{?(list.draw_rate=='1.00' && list.type==1 )|| list.draw_rate=='0'|| list.draw_rate==''}VS{:}{=number_format(list.draw_rate, 2)}{/}</td>
+						<td>{=number_format(list.away_rate, 2)}</td>
+						<td>
+							{? list.total_betting > 0}
+						  	<font color=blue>
+						  		<a href=javascript:team_betting2("/gameUpload/popup_gamedetail?child_sn={list.child_sn}"); style='cursor:hand' onmousemove="showpup('{list.home_team}&nbsp;&nbsp;VS&nbsp;&nbsp;{list.away_team}')" onmouseout='hidepup()'>
+						  			<b>{=mb_strimwidth(list.away_team, 0, 20, "..", "utf-8")}</b>
+						  		</a>
+						  	</font>
+						  {:}
+						  	<a href=javascript:team_betting2('/gameUpload/popup_gamedetail?child_sn={list.child_sn}'); style='cursor:hand' onmousemove="showpup('{list.home_team}&nbsp;&nbsp;VS&nbsp;&nbsp;{list.away_team}')" onmouseout='hidepup()'>
+						  		{=mb_strimwidth(list.away_team, 0, 20, "..", "utf-8")}
+								</a>&nbsp;&nbsp;
+						  {/}
+						</td>
+						 <td>{list.home_score}:{list.away_score}</td>
+						 <td>
+						 		{? list.win==1} 홈승
+								{: list.win==2} 원정승
+								{: list.win==3} 무승부
+								{: list.win==4} 취소/적특
+								{:} &nbsp;
+								{/}
+						 	</td>
+						 	
+						 	<td>
+						 		{? list.kubun==1}
+						 		종료
+						 		{:}
+						 		<select name="play" id="state_{list.child_sn}" onChange="onStateChange({list.child_sn});">
+						 			<option value=0  {? list.kubun==0}  selected {/}>발매</option>
+									<option value=-1 {? list.kubun==''} selected {/}>대기</option>
+								</select>
+								{/}
+							</td>
+						<td>
+							<input type='button' class='btnStyle4' value="배당수정" onclick=open_window('/gameUpload/modifyrate?idx={.child_sn}&gametype={list.type}&mode=edit','650','350')>
+						</td>
+						<td>
+							{? list.special==2 && list.result!=1}
+								<input type="button" class="btnStyle3" value="마감" onclick="onDeadLine({list.child_sn})";>&nbsp;
+							{/}
+							<input type="button" class="btnStyle3" value="수정" onclick="window.open('/gameUpload/popup_modifyresult?mode=edit&idx={list.child_sn}&result={.result}','','resizable=no width=650 height=400')";>&nbsp;
+							{? .result!=1}
+								<input type="button" class="btnStyle3" value="삭제" onclick="onDelete({list.child_sn})">
+							{:}
+								<input type='button' class="btnStyle3" value="결과취소" style="color:red" onclick="go_rollback('/gameUpload/cancel_resultProcess?idx={list.child_sn}&type={type}')")>
+							{/}
+						</td>
+					</tr>
+				{/}
+			</tbody>
+		</table>
+ 		
+		<div id="pages">
+			{pagelist}
+		</div>
+	</form>
+	

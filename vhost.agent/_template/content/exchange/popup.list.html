@@ -1,0 +1,89 @@
+</head>
+
+<body>
+
+<div id="wrap_pop">
+	<div id="pop_title">
+		<h1>출금 내역</h1>
+		<p><img src="/img/btn_s_close.gif" onclick="window.close()"></p>
+	</div>
+
+	<table cellspacing="1" class="tableStyle_normal" summary="출금 내역">
+	<legend class="blind">출금 내역</legend>
+	<thead>
+		<tr>
+		  <th>신청시간</th>
+		  <th>처리시간</th>
+		  <th>아이디</th>
+		  <th>닉네임</th>
+		  <th>당시금액</th>
+		  <th>보유금액</th>
+		  <th>출금금액</th>		  
+		  <th>보너스</th>		  
+		  <th>실입금액</th>		  
+		  <th>계좌번호</th>		  
+		  <th>예금주</th>
+		  <th>파트너</th>
+		  <th>상태</th>
+		</tr>
+	</head>
+	<tbody>
+		{@ list}
+			<tr>
+				<td>{list.regdate}</td>        
+				<td>{list.operdate}</td>
+				<td>{list.uid}</td>
+				<td>{list.nick}</td>
+				<td>{list.before_money}</td>				
+				<td>{list.g_money}</td>				
+				<td>{list.amount}</td>				
+				<td>{list.bonus}</td>				
+				<td>{list.agree_amount}</td>				
+				<td>{list.bank_account}</td>
+				<td>{list.bank_owner}</td>
+				<td>{list.recommendId}</td>
+				<td>
+					{? list.state==0}
+						<font color='red'>신청</font>
+					{: list.state==1}
+						<font color='blue'>완료</font>
+					{:}
+						<font color='Purple'>대기</font>
+					{/}	
+				</td>
+			  </tr>
+		{/}
+	</tbody>
+	</table>
+
+	<div id="pages">
+		{pagelist}
+	</div>
+
+	<div id="search">
+		<div class="wrap">
+			<form action="?" method="get" name="form2" id="form2">
+			<select name="seldate">
+				<option value="regdate" {? seldate=="regdate"} selected {/}>신청시간</option>
+				<option value="operdate" {? seldate=="operdate"} selected {/}>처리시간 </option>
+			</select>	
+			<span class="icon">날짜</span>
+			<input name="date_id" type="text" id="date_id" value="{date_id}" maxlength="20" class="date" onclick="new Calendar().show(this);"> ~ <input name="date_id1" type="text" id="date_id1" value="{date_id1}" maxlength="20" class="date" onclick="new Calendar().show(this);">
+			<select name="search_type">
+				<option value="uid" 					{? field=="uid"} 					selected {/}>아이디</option>
+				<option value="nick"  					{? field=="nick"} 					selected {/}>닉네임</option>
+				<option value="bank"  				{? field=="bank"} 				selected {/}>은행명</option>
+				<option value="bank_account" 	{? field=="bank_account"} 	selected {/}>은행계좌</option>
+				<option value="bank_owner"  	{? field=="bank_owner"}		selected {/}>예금주</option>
+				<option value="partner_id"  		{? field=="partner_id"}			selected {/}>파트너</option>
+			</select>
+            <input name="keyword" type="text" id="key" class="name" value="{id}" maxlength="20"/>
+            <input name="Submit4" type="image" src="/img/btn_search.gif" class="imgType" title="검색" />
+          </form>
+		</div>
+	</div>
+
+</div>
+
+</body>
+</html>

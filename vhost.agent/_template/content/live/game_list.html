@@ -1,0 +1,257 @@
+<script>document.title = '라이브-게임관리';</script>
+
+<script>
+	function on_account(detail_sn)
+	{
+		if(confirm("정산을 진행하시겠습니까?"))
+		{
+			$.ajax({
+				type: "get",
+				url:"/LiveGame/ajax_account_process?act=account&detail_sn="+detail_sn,
+				dataType: "json",
+				success : function(json) {
+					if(json==null || json.length<=0) {
+						location.href="/LiveGame/game_list";
+						return true;
+					}
+					else if(json.result==-1) {
+						alert("이미 정산처리되었습니다.");
+					}
+					else if(json.result==-2) {
+						alert("결과가 입력되지 않았습니다.");
+					}
+					else if(json.result==1) {
+						var text="";
+						if(json.paused=='Y')
+							text = "<input type='button' value='정지해제'  class='btnStyle3' onClick='on_unpause("+detail_sn+")'>";
+						else if(json.state=='PLAY')
+							text = "<input type='button' value='베팅정지'  class='btnStyle3' onClick='on_pause("+detail_sn+")'>";
+						else if(json.state=='ACC')
+							text = "<input type='button' value='정산취소'  class='btnStyle3' onClick='on_account_cancel("+detail_sn+")'>";
+						else if(json.state=='FIN')
+							text = "<input type='button' value='정산'  class='btnStyle3' onClick='on_account("+detail_sn+")'>";
+							
+						$("tr[name=tr_"+detail_sn+"] td:last-child").html(text);
+					}
+				}
+			});
+			
+			//document.location = "/LiveGame/account_process?act=account&detail_sn="+detail_sn;
+		}
+	}
+	
+	function on_account_cancel(detail_sn)
+	{
+		if(confirm("정산취소를 진행하시겠습니까?"))
+		{
+			$.ajax({
+				type: "get",
+				url:"/LiveGame/ajax_account_process?act=account_cancel&detail_sn="+detail_sn,
+				dataType: "json",
+				success : function(json) {
+					if(json==null || json.length<=0) {
+						location.href="/LiveGame/game_list";
+						return true;
+					}
+					else if(json.result==-1) {
+						alert("상태값 오류입니다. !ACC.");
+					}
+					else if(json.result==1) {
+						var text="";
+						if(json.paused=='Y')
+							text = "<input type='button' value='정지해제'  class='btnStyle3' onClick='on_unpause("+detail_sn+")'>";
+						else if(json.state=='PLAY')
+							text = "<input type='button' value='베팅정지'  class='btnStyle3' onClick='on_pause("+detail_sn+")'>";
+						else if(json.state=='ACC')
+							text = "<input type='button' value='정산취소'  class='btnStyle3' onClick='on_account_cancel("+detail_sn+")'>";
+						else if(json.state=='FIN')
+							text = "<input type='button' value='정산'  class='btnStyle3' onClick='on_account("+detail_sn+")'>";
+							
+						$("tr[name=tr_"+detail_sn+"] td:last-child").html(text);
+					}
+				}
+			});
+			//document.location = "/LiveGame/account_process?act=account_cancel&detail_sn="+detail_sn;
+		}
+	}
+	
+	function on_pause(detail_sn)
+	{
+		if(confirm("베팅 정지를 진행하시겠습니까?"))
+		{
+			document.location = "/LiveGame/account_process?act=pause&detail_sn="+detail_sn;
+		}
+	}
+	
+	function on_unpause(detail_sn)
+	{
+		if(confirm("베팅정지 해제를 진행하시겠습니까?"))
+		{
+			document.location = "/LiveGame/account_process?act=unpause&detail_sn="+detail_sn;
+		}
+	}
+	
+	function toggle(id)
+	{
+		$( "tr[name="+id+"]").slideToggle(100);
+	}
+	
+	function on_delete(live_sn)
+	{
+		if(confirm("게임을 삭제하시겠습니까?"))
+		{
+			document.location = "/LiveGame/account_process?act=delete_live_game&live_sn="+live_sn;
+		}
+	}
+	
+</script>
+</head>
+
+<div class="wrap">
+
+	<div id="route">
+		<h5>관리자 시스템 - 항목 보기</h5>
+	</div>
+	<h3>항목 보기</h3>
+	
+	<div id="search">
+		<form name=frmSrh method=post action="/LiveGame/game_list">
+			
+			<div class="wrap_search">
+				
+				<!-- 기간 필터 -->
+				<span class="icon">날짜</span><input name="begin_date" type="text" id="begin_date" class="date" value="{begin_date}" maxlength="20" onclick="new Calendar().show(this);"/>&nbsp;~
+				<input name="end_date" type="text" id="end_date" class="date" value="{end_date}" maxlength="20" onclick="new Calendar().show(this);" />
+				
+				<!-- 팀검색, 리그검색 -->
+				<select name="filter_type">
+					<option value="filter_home_team" {? filter_type=="home_team"} selected{/}>홈팀</option>
+					<option value="filter_away_team" {? filter_type=="away_team"} selected{/}>원정팀</option>
+					<option value="filter_league" {? filter_type=="league"} selected{/}>리그명</option>
+				</select>
+				<input type=text" size=10 name="keyword" value="{keyword}" class="name">
+				
+				<!-- 검색버튼 -->
+				<input name="Submit4" type="image" src="/img/btn_search.gif" class="imgType" title="검색" />
+				
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 실행시간 : bets <font color='blue'>{daemon_state['main_bets_access_timer']}</font>, live <font color='blue'>{daemon_state['event_data_access_timer']}</font>
+			</div>
+		</form>
+	</div>
+	
+	<form id="form1" name="form1" method="post" action="?">
+  	<input type="hidden" name="act" value="delete">  	
+		<table cellspacing="1" class="tableStyle_gameList">
+			<legend class="blind">게임별 상세항목</legend>
+			<thead>
+				<tr>
+					<th scope="col">번호</th>
+					<th scope="col">게임수</th>
+					<th scope="col">진행상태</th>
+					<th scope="col">종목</th>
+					<th scope="col">경기일시</th>
+					<th scope="col">리그</th>
+					<th scope="col">홈팀</th>
+					<th scope="col">원정팀</th>
+					<th scope="col">전반 스코어</th>
+					<th scope="col">후반 스코어</th>
+					<th scope="col">전후반 스코어</th>
+					<th scope="col">배팅총액</th>
+					<th scope="col">수익</th>
+					<th scope="col">관리</th>
+				</tr>
+			</thead>
+			<tbody>
+	    	{@ list}
+ 				<tr class={? list.game_state=='FIN'}"gameEnd"{:}"gameGoing"{/} onclick="toggle('detail_{.live_sn}')">
+					<td><font color='blue'>{list.live_sn}</font></td>
+					<td>+{=count(list.detail)}</td>
+					<td>
+					{? list.game_state == 'READY'} 대기중
+					{: list.game_state == 'FH'} 전반전(경기중)
+					{: list.game_state == 'HT'} 하프타임(경기중)
+					{: list.game_state == 'SH'} 후반전(경기중)
+					{: list.game_state == 'FIN'} 경기종료
+					{/}
+					</td>
+					<td>{list.sport_name}</td>
+					<td>{list.start_time}</td>
+					<td>{list.league_name}</td>
+					
+					<td>{=mb_strimwidth(list.home_team, 0, 30, "..", "utf-8")}</td>
+					<td>{=mb_strimwidth(list.away_team, 0, 30, "..", "utf-8")}</td>
+					
+					<td>{? list.first_score==-1}-{:} {list.first_score}{/}</td>
+					<td>{? list.second_score==-1}-{:} {list.second_score}{/}</td>
+					<td>{? list.score==-1}-{:} {list.score}{/}</td>
+					<td>{=number_format(list.total_betting_money)}</td>
+					<td>
+						{? list.total_betting_money-list.prize<0}<font color='red'>{=number_format(list.total_betting_money-list.prize)}</font>
+						{:}<font color='blue'>{=number_format(list.total_betting_money-list.prize)}</font>
+						{/}
+					</td>
+					<td>
+						{? list.game_state=="READY"}
+						<input type="button" value="삭제"  class="btnStyle3" onClick="on_delete({list.live_sn})">						
+						{: list.first_score=='-1' || list.second_score=='-1' || list.game_state != 'FIN'}<input type="button" value="수동"  class="btnStyle3" onClick="open_window('/LiveGame/popup_manual_fin?live_sn={list.live_sn}','650','300')">
+						{: list.account_count>0}미정산 +{list.account_count}
+						{:}-
+						{/}
+					</td>
+				</tr>
+				
+				{@ detail}
+				<tr class="gameDetail" name="detail_{list.live_sn}" style="display:none;">
+					<td colspan="14">
+						<table cellspacing="1">
+							<tr>
+								<th scope="col">종류</th>
+								{@ total}
+									<th>{total.key_}</th>
+								{/}
+								<th scope="col">관리</th>
+							</tr>
+							
+							<tr bgcolor="#ede8e8" name="tr_{detail.live_detail_sn}">
+								<td width="120">{detail.alias}</td>
+								{@ total}
+								<td width="100/{total.size_}%" align="center" style="border-bottom:1px #CCCCCC solid;color: #666666{? detail.win_position==total.key_};background :#fff111{/}">
+									{? total.value_>0}<a href="#" onclick="open_window('/LiveGame/popup_betting_list?detail_sn={detail.live_detail_sn}&betting_position={total.key_}','1024','600')">{=number_format(total.value_)}</a>{:}{=number_format(total.value_)}{/}
+								</td>
+								{/}
+								<!-- 마지막 td에 존재해야 한다. ajax에 의해 변경됨 -->
+								<td width="60" >
+								{? detail.paused=='Y'}
+									<input type="button" value="정지해제"  class="btnStyle3" onClick="on_unpause({detail.live_detail_sn})">
+								{: detail.detail_state=='PLAY'}
+									<input type="button" value="베팅정지"  class="btnStyle3" onClick="on_pause({detail.live_detail_sn})">
+								{: detail.detail_state=='ACC'}
+									<input type="button" value="정산취소"  class="btnStyle3" onClick="on_account_cancel({detail.live_detail_sn})">
+								{: detail.detail_state=='FIN'}
+									<input type="button" value="정산"  class="btnStyle3" onClick="on_account({detail.live_detail_sn})">
+								{/}
+								</td>
+							</tr>															
+						</table>
+					</td>
+				</tr>
+				{/}
+	    	{/}
+	    	<tr>
+	    		<td colspan="11">총합</td>
+	    		<td>{=number_format(static.total_betting_money,0)}</td>
+	    		<td>
+	    			{? static.total_betting_money-static.total_prize<0}<font color='red'>{=number_format(static.total_betting_money-static.total_prize)}</font>
+					{:}<font color='blue'>{=number_format(static.total_betting_money-static.total_prize)}</font>
+					{/}
+	    		</td>
+	    		<td>-</td>
+	    	</tr>
+	  </table>
+	  
+	  <div id="pages">
+			{pagelist}
+		</div>
+	
+	</form>
+</div>

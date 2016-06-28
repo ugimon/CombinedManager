@@ -1,0 +1,180 @@
+<script>
+	function onSelectAll(chk)
+	{	
+		var chk = document.frm.chkAll.checked;
+		for (i=0;i<document.all.length;i++) 
+		{
+			if (document.all[i].name=="child_sn[]") 
+			{
+				document.all[i].checked=chk;
+			}
+		}
+	}
+
+	function onCopyClick()
+	{
+		var iCount=0;
+		for (i=0;i<document.all.length;i++) 
+		{
+			if(document.all[i].name=="child_sn[]")
+			{
+				if(document.all[i].checked==true)
+				{
+					iCount++;
+				}
+			}
+		}
+		if(iCount==0)
+		{
+			alert("선택된 경기가 없습니다.");
+			return false;
+		}
+		else
+		{
+			falg=window.confirm("복사 하시겠습니까?"); 
+			if(falg)
+			{
+				var checkboxes;
+				if(document.frm.handicap.checked) 	
+				{
+					checkboxes="1";
+				}
+				else
+				{
+					checkboxes="0";
+				}
+					
+				if(document.frm.underover.checked)
+				{
+					checkboxes+="1";
+				}
+				else
+				{
+					checkboxes+="0";
+				}
+					
+				if(document.frm.s_handicap.checked)
+				{
+					checkboxes+="1";
+				}
+				else
+				{
+					checkboxes+="0";
+				}
+					
+				if(document.frm.s_underover.checked)
+				{
+					checkboxes+="1";
+				}
+				else
+				{
+					checkboxes+="0";
+				}
+				
+				if(document.frm.normal_special.checked)
+				{
+					checkboxes+="1";
+				}
+				else
+				{
+					checkboxes+="0";
+				}
+					
+				document.frm.checkboxes.value=checkboxes;
+				document.frm.submit();
+			}
+		}
+	}
+</script>
+</head>
+
+	<div id="route">
+		<h5>관리자 시스템 - 게임 복사</h5>
+	</div>
+	<h3>게임 복사</h3>
+
+	<div id="search">
+		<div class="betList_option">
+			<form name="frmSrh" method="post" action="/gameUpload/game_copy_list">
+				
+				<span class="icon">날짜</span>
+				<input name="begin_date" type="text" id="begin_date" class="date" value="{begin_date}" maxlength="20" onclick="new Calendar().show(this);"/>
+				~
+				<input name="end_date" type="text" id="end_date" class="date" value="{end_date}" maxlength="20" onclick="new Calendar().show(this);"/>
+				
+				<span>종목</span>
+				<select name="keyword_category" onchange="submit()">
+					<option value="">::전체</option>
+					{@ category_list}
+						<option value="{.name}" {? keyword_category==.name}selected{/}>{.name}</option>
+					{/}
+				</select>
+				
+				<span>검색</span>
+				<select name="selector">
+					<option value="league" {?selector=="league"}selected{/}>리그명</option>
+					<option value="home_team" {?selector=="home_team"}selected{/}>홈팀명</option>
+					<option value="away_team" {?selector=="away_team"}selected{/}>원정팀명</option>
+				</select>
+				<input type="text" name="keyword" value="{keyword}">
+				<input type="button" value="검색" onclick="submit()" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'" onmouseout="this.className='Qishi_submit_a'">
+			</form>
+		</div>
+		
+		<div class="wrap_search">	
+			<form name="frm" method="post" action="?">
+			<input type="hidden" name="mode" value="copy">
+			<input type="hidden" name="checkboxes" value="">
+			<span>설정</span>
+			핸디캡 : <input type="text" name="handicap_rate" size="5" value="1.87" style="border:1px #97ADCE solid;" onkeyup='this.value=this.value.replace(/[^0-9.]/gi,"")'>
+			언더오버 : <input type="text" name="underover_rate" size="5" value="1.87" style="border:1px #97ADCE solid;" onkeyup='this.value=this.value.replace(/[^0-9.]/gi,"")'>
+			스페셜 핸디캡 : <input type="text" name="special_handicap_rate" size="5" value="1.85" style="border:1px #97ADCE solid;" onkeyup='this.value=this.value.replace(/[^0-9.]/gi,"")'>
+			스페셜 언더오버 : <input type="text" name="special_underover_rate" size="5" value="1.85" style="border:1px #97ADCE solid;" onkeyup='this.value=this.value.replace(/[^0-9.]/gi,"")'>
+			스페셜 승무패 : <input type="text" name="normal_special_rate" size="5" value="1.85" style="border:1px #97ADCE solid;" onkeyup='this.value=this.value.replace(/[^0-9.]/gi,"")'>
+			<br>
+			<input type="checkbox" name="handicap" class="radio">핸디캡
+			<input type="checkbox" name="underover" class="radio">언더오버
+			<input type="checkbox" name="s_handicap" class="radio">핸디캡(스패셜)
+			<input type="checkbox" name="s_underover" class="radio">언더오버(스패셜)
+			<input type="checkbox" name="normal_special" class="radio">스패셜(승무패)
+			<input type="button" value="일괄복사" onclick="onCopyClick()" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'" onmouseout="this.className='Qishi_submit_a'">
+		</div>
+	</div>
+	
+  	
+	<table cellspacing="1" class="tableStyle_gameList">
+		<legend class="blind">항목보기</legend>
+			<thead>
+	    	<tr>
+	      	<th class="check" width="5"><input type="checkbox" name="chkAll" onclick="javascript:onSelectAll(this);"/></th>
+					<th>No</th>
+					<th>경기일시</th>
+					<th>종목</th>
+					<th>리그</th>
+					<th>홈팀</th>
+					<th>홈배당</th>
+					<th>무배당(기준점)</th>
+                    <th>원정배당</th>
+					<th>원정팀</th>
+	    	</tr>
+	 		</thead>
+			<tbody>
+	 			{@ list}
+					<tr>
+						<td><input name="child_sn[]" type="checkbox" value="{list.sn}"/></td>
+						<td>{.sn}</td>
+						<td><input name="game_date[{list.sn}]" type="hidden" value="{=sprintf("%s %s:%s", list.gameDate, list.gameHour, list.gameTime)}"/>{=sprintf("%s %s:%s", substr(list.gameDate,5), list.gameHour, list.gameTime)}</td>
+						<td><input name="category[{list.sn}]" type="hidden" value="{list.sport_name}"/>{list.sport_name}</td>
+						<td><input name="league_sn[{list.sn}]" type="hidden" value="{list.league_sn}"/>{list.league_name}</td>
+						<td class="homeName"><input name="home_team[{list.sn}]" type="hidden" value="{list.home_team}"/><font color=blue>{=mb_strimwidth(list.home_team, 0, 20, "..", "utf-8")}</font></td>
+						<td><input type='hidden' name="home_rate[{list.sn}]" value="{list.home_rate}"/>{list.home_rate}</td>
+						<td><input type='hidden' name="draw_rate[{list.sn}]" value="{list.draw_rate}"/>{list.draw_rate}</td>
+                        <td><input type='hidden' name="away_rate[{list.sn}]" value="{list.away_rate}" />{list.away_rate}</td>
+						<td class="awayName"><input name="away_team[{list.sn}]" type="hidden" value="{list.away_team}"/><font color=blue><b>{=mb_strimwidth(list.away_team, 0, 20, "..", "utf-8")}</b></font></td>
+					</tr>
+				{/}
+			</tbody>
+		</table>
+	</form>
+	
+</div>

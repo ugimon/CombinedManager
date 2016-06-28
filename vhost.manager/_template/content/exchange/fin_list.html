@@ -1,0 +1,101 @@
+<script>document.title = '출금완료';</script>
+
+<div class="wrap" id="Withdrawal_over">
+	<div id="route">
+		<h5>관리자 시스템 > 입출금 관리 > <b>출금완료</b></h5>
+	</div>
+
+	<h3>출금완료</h3>
+
+	<ul id="tab">
+		<li><a href="/charge/list" id="Richer">입금신청</a></li>
+		<li><a href="/charge/finlist" id="Richer_over">입금완료</a></li>
+		<li><a href="/exchange/list" id="Withdrawal">출금신청</a></li>
+		<li><a href="/exchange/finlist" id="Withdrawal_over">출금완료</a></li>
+	</ul>
+	<div id="search">
+		<div class="wrap">
+			<form action="?" method="GET" name="form2" id="form2">
+				<span class="icon2">출력</span>
+				<input name="perpage" type="text" id="perpage"  class="sortInput" onkeyup="if(event.keyCode !=37 && event.keyCode != 39) value=value.replace(/\D/g,'');" maxlength="3" size="5" value="{perpage}" onmouseover="this.focus()">
+				
+				<!-- 날짜 타입  필터 -->
+				<select name="date_type">
+					<option value="regdate"  {? date_type=="regdate"}  selected {/}>신청시간</option>
+					<option value="operdate" {? date_type=="operdate"} selected {/}>처리시간 </option>
+				</select>	
+				
+				<!-- 기간 필터 -->
+				<span class="icon2">날짜</span><input name="begin_date" type="text" id="begin_date" class="date" value="{begin_date}" maxlength="20" onclick="new Calendar().show(this);"/>&nbsp;~
+				<input name="end_date" type="text" id="end_date" class="date" value="{end_date}" maxlength="20" onclick="new Calendar().show(this);" />
+				
+				<!-- 총판 필터 -->
+				<select name="filter_partner_sn">
+					<option value="" {? filter_partner_sn==""} selected {/}>총판</option>
+					{@ partner_list}
+						<option value={.Idx} {? filter_partner_sn==.Idx} selected {/}>{.rec_id}</option>
+					{/}
+				</select>
+				
+				<!-- 키워드 검색 -->
+				<select name="field">
+					<option value="uid" {? field=="uid"} 	selected {/}>아이디</option>
+					<option value="nick"   {? field=="nick"} 	selected {/}>닉네임</option>
+					<option value="bank_owner" {? field=="bank_owner"} 	selected {/}>예금주</option>
+				</select>
+				<input name="keyword" type="text" id="key" class="name" value="{keyword}" maxlength="20" onmouseover="this.focus()"/>
+				
+				<!-- 검색버튼 -->
+				<input name="Submit4" type="image" src="/img/btn_search.gif" class="imgType" />
+			</form>
+		</div>
+	</div>
+
+	<form id="form1" name="form1" method="post" action="?act=del">
+	<table cellspacing="1" class="tableStyle_normal" summary="출금완료 목록">
+	<legend class="blind">출금완료 목록</legend>
+	<thead>
+		<tr>
+			<th scope="col">사이트</td>
+			<th scope="col">신청시간</th>
+			<th scope="col">처리시간</th>
+			<th scope="col" class="id">아이디</th>
+			<th scope="col">닉네임</th>
+			<th scope="col">당시금액</th>
+			<th scope="col">보유금액</th>
+			<th scope="col">출금금액</th>
+			<th scope="col">보너스</th>
+			<th scope="col">은행명</th>
+			<th scope="col">계좌번호</th>
+			<th scope="col">예금주</th>
+			<th scope="col">총판</th>
+			<th scope="col">상태</th>
+		</tr>
+	</thead>
+	<tbody>
+	{@ list}
+		<tr class="link_lan" style="padding-left:1px;"  onMouseOver="this.style.backgroundColor='#e0eafe';" onMouseOut="this.style.backgroundColor=''" >
+			<td>{? list.logo=='totobang'}포텐{: list.logo=='eclipse'}이클{: list.logo=='poten2'}포텐2{/}</td>
+			<td>{list.regdate}</td>        
+			<td>{list.operdate}</td>
+			<td><a href="javascript:open_window('/member/popup_detail?idx={list.member_sn}',1024,600)">{list.uid}</td>
+			<td>{list.nick}</td>
+			<td>{=number_format(list.beforemoney,0)}</td>
+			<td>{=number_format(list.g_money,0)}</td>
+			<td><b><font color='red'>{=number_format(list.amount,0)}</font></b></td>
+			<td>{=number_format(list.bonus,0)}</td>
+			<td>{list.bank}</td>
+			<td>{list.bank_account}</td>
+			<td>{list.bank_owner}</td>
+			<td>{list.recommendId}</td>
+			<td>{? list.state==0}<font color='red'>신청</font>{: list.state==1}<font color='blue'>완료</font>{:}<img src="/img/btn_s_cancel.gif" title="취소">{/}</td>
+		</tr>
+	{/}
+	</tbody>
+	</table>
+	</form>
+
+	<div id="pages">
+		{pagelist}
+	</div>
+</div>

@@ -1,0 +1,115 @@
+<script>document.title = '홀덤 게임관리-세부 게임로그';</script>
+
+<script language="JavaScript">
+		
+	function on_change()
+	{
+		document.form3.submit();
+	}
+	
+	function go_delete(url)
+	{
+		if(confirm("정말 삭제하시겠습니까?  "))
+		{
+			document.location = url;
+		}
+		else
+		{
+			return;
+		}
+	}
+	
+	function onRevoke(url)
+	{
+		if(confirm("정말 복구하시겠습니까?  "))
+		{
+			document.location = url;
+		}
+		else
+		{
+			return;
+		}
+	}
+	
+	function toggle(id)
+	{
+		$( "#"+id ).slideToggle(100);
+	}	
+	
+	function betting_view(url)
+	{
+		var newwindow = window.open(url,'','width=900,height=300,left=50,scrollbars=yes');
+	}
+	
+	function onKeywordChange(frm)
+	{
+		if(frm.select_keyword.value=='')
+		{
+			frm.keyword.value='';
+			frm.submit();
+		}
+	}
+	
+	function onExceptionBetClick(sn)
+	{
+		if(confirm("[적특] 처리하시겠습니까?"))
+		{
+			document.location = "/game/exceptionBetProcess?sn="+sn;
+		}
+	}
+</script>
+
+</head>
+
+<body>
+
+<div class="wrap_pop">
+	<div id="pop_title">
+		<h1>상세 로그</h1>
+		<p><img src="/img/btn_s_close.gif" onclick="window.close()" title="창닫기"></p>
+	</div>
+		
+  <form id="form1" name="form1" method="post" action="?act=delete_user">
+		<table border="0" cellspacing="1" class="tableStyle_gameList">
+		<thead>
+			<tr>					
+				<th>방번호</th>
+				<th>시작시간</th>
+				<th>아이디</th>
+				<th>포켓카드</th>
+				<th>보드카드</th>
+				<th>족보</th>
+				<th>순위</th>
+				<th>PRE_BETTING</th>
+				<th>PRE_FLOP_BETTING</th>
+				<th>FLOP_BETTING</th>
+				<th>TURN_BETTING</th>
+				<th>RIVER_BETTING</th>
+			</tr>
+		</thead>
+		<tbody>
+		{@ list }
+			<tr class="{.bg_color}">
+				<td>{.room_no}</td>
+				<td>{.format_start_time}</td>
+				<td>{.userid}</td>					
+				<td>{.handy_card}</td>
+				<td>{.board_card}</td>
+				<td>{.handrank}</td>
+				<td>{.rank}</td>
+				<td>{.format_pre_betting_log}</td>
+				<td>{.format_pre_flop_betting_log}</td>
+				<td>{.format_flop_betting_log}</td>
+				<td>{.format_turn_betting_log}</td>
+				<td>{.format_river_betting_log}</td>
+			</tr>
+		{/}	
+		</tbody>
+		</table>
+		
+			
+		<div id="pages">
+			{pagelist}
+		</div>
+	</form>
+</div>

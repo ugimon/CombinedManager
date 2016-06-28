@@ -1,0 +1,416 @@
+<table class="tblType1_1" style="margin-top:20px;width:750px;" summary="ÆÄ¿öº¼´çÃ·¹øÈ£">
+				<caption>ÆÄ¿öº¼´çÃ·¹øÈ£</caption>
+				<colgroup>
+					<col width="80px"/>
+					<col width=""/>
+					<col width="150px"/>	
+					<col width="60px"/>
+					<col width="60px"/>
+					<col width="60px"/>	
+					<col width=""/>
+					<col width=""/>
+					<col width=""/>	
+				</colgroup>
+				<thead>
+					<tr>
+						<th>ÃßÃ·ÀÏ</th>	
+						<th>È¸Â÷</th>
+						<th>´çÃ·¹øÈ£</th>	
+						<th>ÆÄ¿öº¼</th>
+						<th>¼ýÀÚÇÔ</th>
+						<th>È¦/Â¦</th>	
+						<th>´ë/Áß/¼Ò</th>
+						<th>¼ýÀÚÇÕ±¸°£</th>			
+						<th class="tbbghn">ÆÄ¿öº¼±¸°£</th>
+					</tr>
+				</thead>
+				<tbody>
+					
+						<tr>
+							<td>2014-12-16</td>
+							<td>429185</td>
+							<td>
+									
+										<script>
+											numSort('2123011805');
+										</script>
+									
+									
+								</td>
+							<td><img alt="" src="/img/powerball/powerball_ball06.gif"> </td>
+							<td>68</td>
+							<td>
+									
+									Â¦(Even)
+								</td>
+							<td>
+									
+									Áß(65~80)
+									
+								</td>
+							<td>
+									
+									
+									
+									
+									E (66~78)
+									
+								</td>
+							<td class="tbbghn">
+									
+									
+									C (5~6)
+									
+								</td>
+						</tr>
+					
+						<tr>
+							<td>2014-12-16</td>
+							<td>429184</td>
+							<td>
+									
+										<script>
+											numSort('2124191118');
+										</script>
+									
+									
+								</td>
+							<td><img alt="" src="/img/powerball/powerball_ball07.gif"> </td>
+							<td>93</td>
+							<td>
+									È¦(Odd)
+									
+								</td>
+							<td>
+									´ë(81~130)
+									
+									
+								</td>
+							<td>
+									
+									
+									
+									
+									
+									F (79~130)
+								</td>
+							<td class="tbbghn">
+									
+									
+									
+									D (7~9)
+								</td>
+						</tr>
+					
+						<tr>
+							<td>2014-12-16</td>
+							<td>429183</td>
+							<td>
+									
+										<script>
+											numSort('0520191009');
+										</script>
+									
+									
+								</td>
+							<td><img alt="" src="/img/powerball/powerball_ball06.gif"> </td>
+							<td>63</td>
+							<td>
+									È¦(Odd)
+									
+								</td>
+							<td>
+									
+									
+									¼Ò(15~64)
+								</td>
+							<td>
+									
+									
+									
+									D (58~65)
+									
+									
+								</td>
+							<td class="tbbghn">
+									
+									
+									C (5~6)
+									
+								</td>
+						</tr>
+					
+						<tr>
+							<td>2014-12-16</td>
+							<td>429182</td>
+							<td>
+									
+										<script>
+											numSort('0813112818');
+										</script>
+									
+									
+								</td>
+							<td><img alt="" src="/img/powerball/powerball_ball00.gif"> </td>
+							<td>78</td>
+							<td>
+									
+									Â¦(Even)
+								</td>
+							<td>
+									
+									Áß(65~80)
+									
+								</td>
+							<td>
+									
+									
+									
+									
+									E (66~78)
+									
+								</td>
+							<td class="tbbghn">
+									A (0~2)
+									
+									
+									
+								</td>
+						</tr>
+					
+						<tr>
+							<td>2014-12-16</td>
+							<td>429181</td>
+							<td>
+									
+										<script>
+											numSort('2420152201');
+										</script>
+									
+									
+								</td>
+							<td><img alt="" src="/img/powerball/powerball_ball04.gif"> </td>
+							<td>82</td>
+							<td>
+									
+									Â¦(Even)
+								</td>
+							<td>
+									´ë(81~130)
+									
+									
+								</td>
+							<td>
+									
+									
+									
+									
+									
+									F (79~130)
+								</td>
+							<td class="tbbghn">
+									
+									B (3~4)
+									
+									
+								</td>
+						</tr>
+					
+						<tr>
+							<td>2014-12-16</td>
+							<td>429180</td>
+							<td>
+									
+										<script>
+											numSort('2814092225');
+										</script>
+									
+									
+								</td>
+							<td><img alt="" src="/img/powerball/powerball_ball08.gif"> </td>
+							<td>98</td>
+							<td>
+									
+									Â¦(Even)
+								</td>
+							<td>
+									´ë(81~130)
+									
+									
+								</td>
+							<td>
+									
+									
+									
+									
+									
+									F (79~130)
+								</td>
+							<td class="tbbghn">
+									
+									
+									
+									D (7~9)
+								</td>
+						</tr>
+					
+						<tr>
+							<td>2014-12-16</td>
+							<td>429179</td>
+							<td>
+									
+										<script>
+											numSort('2503121610');
+										</script>
+									
+									
+								</td>
+							<td><img alt="" src="/img/powerball/powerball_ball01.gif"> </td>
+							<td>66</td>
+							<td>
+									
+									Â¦(Even)
+								</td>
+							<td>
+									
+									Áß(65~80)
+									
+								</td>
+							<td>
+									
+									
+									
+									
+									E (66~78)
+									
+								</td>
+							<td class="tbbghn">
+									A (0~2)
+									
+									
+									
+								</td>
+						</tr>
+					
+						<tr>
+							<td>2014-12-16</td>
+							<td>429178</td>
+							<td>
+									
+										<script>
+											numSort('2510261409');
+										</script>
+									
+									
+								</td>
+							<td><img alt="" src="/img/powerball/powerball_ball06.gif"> </td>
+							<td>84</td>
+							<td>
+									
+									Â¦(Even)
+								</td>
+							<td>
+									´ë(81~130)
+									
+									
+								</td>
+							<td>
+									
+									
+									
+									
+									
+									F (79~130)
+								</td>
+							<td class="tbbghn">
+									
+									
+									C (5~6)
+									
+								</td>
+						</tr>
+					
+						<tr>
+							<td>2014-12-16</td>
+							<td>429177</td>
+							<td>
+									
+										<script>
+											numSort('2709260503');
+										</script>
+									
+									
+								</td>
+							<td><img alt="" src="/img/powerball/powerball_ball06.gif"> </td>
+							<td>70</td>
+							<td>
+									
+									Â¦(Even)
+								</td>
+							<td>
+									
+									Áß(65~80)
+									
+								</td>
+							<td>
+									
+									
+									
+									
+									E (66~78)
+									
+								</td>
+							<td class="tbbghn">
+									
+									
+									C (5~6)
+									
+								</td>
+						</tr>
+					
+						<tr>
+							<td>2014-12-16</td>
+							<td>429176</td>
+							<td>
+									
+										<script>
+											numSort('1027051125');
+										</script>
+									
+									
+								</td>
+							<td><img alt="" src="/img/powerball/powerball_ball09.gif"> </td>
+							<td>78</td>
+							<td>
+									
+									Â¦(Even)
+								</td>
+							<td>
+									
+									Áß(65~80)
+									
+								</td>
+							<td>
+									
+									
+									
+									
+									E (66~78)
+									
+								</td>
+							<td class="tbbghn">
+									
+									
+									
+									D (7~9)
+								</td>
+						</tr>
+					
+					
+									
+						
+					<tr>
+						<td colspan="9" class="tblType1_1line2"></td>
+					</tr>	
+				</tbody>
+			

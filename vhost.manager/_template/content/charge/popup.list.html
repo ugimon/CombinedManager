@@ -1,0 +1,83 @@
+	</head>
+	
+<body>
+
+<div id="wrap_pop">
+	<div id="pop_title">
+		<h1>입금 내역</h1>
+		<p><img src="/img/btn_s_close.gif" onclick="window.close()" title="창닫기"></p>
+	</div>
+
+	<table cellspacing="1" class="tableStyle_normal" summary="입금 내역">
+	<legend class="blind">회원목록</legend>
+	<thead>
+		<tr>
+		  <th>신청시간</th>
+		  <th>처리시간</th>
+		  <th>아이디</th>
+		  <th>닉네임</th>
+		  <th>당시금액</th>
+		  <th>보유금액</th>
+		  <th>신청금액</th>
+		  <th>실입금액</th>
+		  <th>입금자명</th>
+		  <th>파트너</th>
+		  <th>상태</th>
+		</tr>
+	</thead>
+	<tbody>
+		{@ list}
+			<tr class="link_lan" style="padding-left:1px;"  onMouseOver="this.style.backgroundColor='#e0eafe';" onMouseOut="this.style.backgroundColor=''" >
+				<td>{list.regdate}</td>        
+				<td>{list.operdate}</td>
+				<td>{list.uid}</td>
+				<td>{list.nick}</td>
+				<td>{=number_format(list.before_money,0)}</td>
+				<td>{=number_format(list.g_money,0)}</td>
+				<td>{=number_format(list.amount,0)}</td>
+				<td>{=number_format(list.agree_amount,0)}</td>
+				<td>{list.bank_owner}</td>
+				<td>{list.recommendId}</td>
+				<td>
+					{? list.state==0}
+						<font color='red'>신청</font>
+					{: list.state==1}
+						<font color='blue'>완료</font>
+					{:}
+						<font color='yellow'>삭제</font>
+					{/}
+				</td>
+		  	</tr>
+		{/}
+	</tbody>
+	</table>
+	<div id="pages">
+		{pagelist}
+	</div>
+
+	<div id="search">
+		<div class="wrap">
+			<form action="?" method="get" name="form2" id="form2">
+				<select name="seldate">
+					<option value="regdate" {? seldate=="regdate"} selected {/}>신청시간</option>
+					<option value="operdate" {? seldate=="operdate"} selected {/}>처리시간 </option>
+				</select>	
+				<span class="icon">날짜</span>
+				<input name="date_id" type="text" id="date_id" value="{date_id}" maxlength="20" class="date" onclick="new Calendar().show(this);" /> ~ 
+				<input name="date_id1" type="text" id="date_id1" value="{date_id1}" maxlength="20" class="date" onclick="new Calendar().show(this);">
+				<select name="field">
+					<option value="mem_id" 	{? field=="mem_id"} selected {/}>아이디</option>
+					<option value="nick"  	{? field=="nick"} 	selected {/}>닉네임</option>
+					<option value="rec_id"  {? field=="rec_id"}	selected {/}>파트너</option>
+					<option value="a_name"  {? field=="a_name"}	selected {/}>입금자명</option>
+				</select>
+        <input name="mem_id" type="text" id="key" class="name" maxlength="20" value="{uid}"/>
+        <input name="Submit4" type="image" src="/img/btn_search.gif" class="imgType" title="검색" />
+      </form>
+		</div>
+	</div>
+
+</div>
+
+</body>
+</html>

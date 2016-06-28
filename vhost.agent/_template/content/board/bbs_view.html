@@ -1,0 +1,192 @@
+
+<title> 문장 내용</title>
+
+<script Language='Javascript'>
+function openNewWindow(msg) { 
+	window.open("<?=SITE_ROOT?>/memo/memowrite_acc.php?userid="+msg, "쪽지함", "scrollbars=yes,resizable=no,copyhistory=no,width=650,height=300");
+} 
+ function check_reply() {
+	var frm = document.bbs;
+	
+	if (frm.comment.value == "") {
+	   alert("내용을 쓰십시오!!!");
+	   frm.comment.focus();
+	   return false;
+	} 
+
+	frm.submit();
+}
+function addChar(aspchar) {
+	var i;
+	var obj;
+	var objMsg;
+	var el;
+var frm = document.bbs;
+frm.comment.value = aspchar
+//	ChkMsgLen(1);
+	return;
+}
+function goDel(delidx,idx){
+	var result = confirm('삭제하시겠습니까?');
+	if(result){
+		location.href="?mode=del&delidx="+delidx+"&urlidx="+idx;
+	}	
+}
+function sms(url){
+window.open(url,'','scrollbars=yes,width=200,height=250,left=100,top=100');
+}
+function Form_ok() {
+		if (Form1.title.value == "") {
+		   alert("제목 입력!!!");
+		   document.Form1.title.focus();
+		   return;
+		}
+		
+		if(Form1.time.value ==""){
+			alert("시간 입력!!!");
+		    document.Form1.time.focus();
+		    return;
+		}
+		if(len(Form1.time.value) !=19){
+			alert("시간 격식이 틀립니다. 확인하십시오!!!");
+		    document.Form1.time.focus();
+		    return;
+		}
+		if(Form1.content.value == ""){
+			 alert("내용 입력!!!");
+		     document.Form1.content.focus();
+		    return;
+		}
+		if (confirm("입력하신 내용을 등록 하시겠습니까 ?")) {
+			document.Form1.submit();
+		} else {
+			return;
+		}
+}
+function len(s) { 
+var l = 0; 
+var a = s.split(""); 
+for (var i=0;i<a.length;i++) { 
+if (a[i].charCodeAt(0)<299) { 
+l++; 
+} else { 
+l+=2; 
+} 
+} 
+return l; 
+} 
+//用法onkeypress="return checkNumber(event);
+function checkNumber(e)//只能输入数字
+{
+	var key = window.event ? e.keyCode : e.which;
+	var keychar = String.fromCharCode(key);
+	//var el = document.getElementById('test');
+	var msg = document.getElementById('msg');
+	reg = /\d/;
+	//alert(msg);
+	var result = reg.test(keychar);
+	if(!result) 
+	{
+		msg.innerHTML="<font color='red'>숫자만 입력 가능합니다.</font>";
+		return false;
+	}
+	else
+	{
+		msg.innerHTML="";
+		return true;
+	}
+}
+</script>
+<script charset="utf-8" src="../web_editor_cocopa/kindeditor.js"></script>
+</head>
+<body style="background-color:#E0EAFE">
+<div class="admin_main_tit">관리자 시스템 - 문장 내용</div>
+
+<div class="admin_main_nr_dbox">
+ 	<form name="Form1" action="?mode=edit" method="post">
+	<input type="hidden" name="id" value="{num}">
+    <table width="700" border="0" cellpadding="3" cellspacing="1" bgcolor="#EAEAEA">
+      <tr>
+        <td width="67" align="right" bgcolor="#FFFFFF">제목：</td>
+        <td bgcolor="#FFFFFF"><table width="100%" border="0" cellpadding="0" cellspacing="3">
+            <tr>
+              <td width="58%" align="left"><input type="text" name="title" value="{title}" style="border:1px solid #cccccc;" size="40"></td>
+              <td align="right"><?php if($nick!="관리자"){?><a href="javascript:sms('member_sms.php?id={mem_id}');" ><img src="../images/sms.gif" border=0 title="문자로 답변 보내기" ></a>
+					<a href="JavaScript:openNewWindow('{mem_id}')"><img src="../images/note.gif" border=0 title="쪽지로 답변 보내기"></a><?php }?>
+			  </td>
+            </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td align="right" bgcolor="#FFFFFF">이름：</td>
+        <td bgcolor="#FFFFFF">{nick}</td>
+      </tr>
+	   <tr>
+        <td align="right" bgcolor="#FFFFFF">조회： </td>
+        <td bgcolor="#FFFFFF"><input type="text" name="hit" value="{hit}" style="border:1px solid #cccccc;"  size="5" onkeypress="return checkNumber(event);"><span id="msg"></span></td>
+      </tr>
+	  <tr>
+        <td align="right" bgcolor="#FFFFFF">시간： </td>
+        <td bgcolor="#FFFFFF"><input type="text" name="time" value="{regdate}" style="border:1px solid #cccccc;" size="20"></td>
+      </tr>
+    </table>
+    <table width="700" border="0" cellpadding="0" cellspacing="1" bgcolor="#EAEAEA">
+      <tr><td align="right" bgcolor="#FFFFFF" width="72">내용：</td>
+        <td  bgcolor="#FFFFFF" height="90" valign="top" colspan=3 >
+		<textarea id="on" name="content" cols="80" rows="4" >{content}</textarea>
+		<script>       
+			KE.show({    id : "on", 
+							  width : "650px", //编辑器的宽度为70%   
+							  height : "350px", //编辑器的高度为100px   
+							  filterMode : true, //不会过滤HTML代码  
+							  resizeMode : 1 ,//编辑器只能调整高度
+							  items : [
+								'fontname', 'fontsize', '|', 'textcolor', 'bgcolor', 'bold', 'italic', 'underline',
+								'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+								'insertunorderedlist', '|']
+		   });
+		</script>
+		</td>
+      </tr>
+	  <tr bgcolor="#ffffff">
+		<td colspan="4" align="center"><input type="button" value="수 정"  style="border:solid 1px #b1b1b1;background:#ffffff" onclick="Form_ok()"></td>
+	</tr>
+	</form>
+		{@ memolist }
+		  <tr onMouseOver="this.style.backgroundColor='#e0eafe';" onMouseOut="this.style.backgroundColor=''">
+			  <td bgcolor="#FFFFFF" colspan="0" align="right" width="92">{memolist.mem_nick}:</td>
+			  <td bgcolor="#FFFFFF" colspan="0" align="left" width="300">
+					<textarea cols="70" rows="2" style="border-color:#CCCCCC #cccccc #cccccc #CCCCCC;border-style:solid;border-width:1px;font-size:12px;" readonly>{memolist.content}</textarea>
+			  </td>
+			  <td bgcolor="#FFFFFF" colspan="0" align="center">{memolist.regdate}</td>
+			  <td bgcolor="#FFFFFF" colspan="0" align="center" width="30"><a href="javascript:goDel({memolist.idx},{sn});void(0);" style="text-decoration:none; color:#20902b;">삭제</a></td>
+		  </tr>
+	  {/}	
+  	</table>	
+	<form name="bbs" action="?mode=add" method="post">
+	<input type="hidden" name="id" value="{num}">
+     <table width="700" border="0" cellpadding="3" cellspacing="1" bgcolor="#EAEAEA">
+	  <tr>
+        <td height="30" align="right" bgcolor="#FFFFFF" width="66">
+		<select name="name" style="border-color:#CCCCCC #cccccc #cccccc #CCCCCC;border-style:solid;border-width:1px;font-size:12px;">
+			<option value="관리자">관리자</option>			
+			{@ admin}
+				<option value="{admin.nick}">{admin.nick}</option>
+			{/}	
+		</select>
+		</td>
+        <td bgcolor="#FFFFFF"><textarea  class="textarea"   rows="3" cols="70"  name="comment" style="border-color:#CCCCCC #cccccc #cccccc #CCCCCC;border-style:solid;border-width:1px;font-size:12px;"></textarea></td>
+        <td bgcolor="#FFFFFF"><input type="button" name="ok"  value="답변" style="border:solid 1px #b1b1b1;background:#ffffff;height:40px;"  onclick="check_reply()"></td>
+	  </tr>
+	  </table>
+	 <table width="700" border="0" cellpadding="3" cellspacing="1" bgcolor="#EAEAEA">
+    <tr>
+        <td height="30" align="center" bgcolor="#FFFFFF"><input type="button" onclick="JavaScript:addChar('입금계좌는 국민은행 500-01-23456-00000  예금주: 배트맨  계좌가 바뀌면 따로 연락 드리니 이 계좌를 당분간 사용하세요');" value="계좌답변" ></td>
+       <td height="30" align="center" bgcolor="#FFFFFF"><input type="button" value="바로처리" onclick="JavaScript:addChar('안녕하세요 ? 늦어서 죄송합니다. 바로 처리해드리겠습니다.');" ></td>
+	   <td height="30" align="center" bgcolor="#FFFFFF"><input type="button" value="담당자 없음" onclick="JavaScript:addChar('안녕하세요 ? 현재 문의하신 부분에 답변을 드릴 담당자가 없으니 연락처를 알려주시면 곧 바로 연락드리겠습니다.');"></td>
+   </tr>
+    </table>
+  </form>
+  </div>
+
+</html>

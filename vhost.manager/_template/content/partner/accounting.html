@@ -1,0 +1,196 @@
+
+<script>
+	
+
+function checkAccount(tid, pid)
+{
+	if(confirm("["+pid+"]총판을 정산하시겠습니까?\r\n※정산일자를 반드시 확인하세요!!!"))
+	{
+		var id = $("#t_"+tid).find("span.t_pid").text();
+		
+		var jcnt = $("#t_"+tid).find("span.t_jcount").text();
+		var icnt = $("#t_"+tid).find("span.t_icount").text();
+		
+		var inm = $("#t_"+tid).find("span.t_inmoney").text();
+		var outm = $("#t_"+tid).find("span.t_outmoney").text();
+
+		var carm = $("#t_"+tid).find("span.t_carrymoney").text();
+		var calm = $("#t_"+tid).find("span.t_calmoney").text();
+
+		var totm = $("#t_"+tid).find("span.t_totalmoney").text();
+
+		var btime = "{begin_date}";
+		var etime = "{end_date}";
+
+		inm = inm.replace(/,/gi, '');
+		outm = outm.replace(/,/gi, '');
+		carm = carm.replace(/,/gi, '');
+		calm = calm.replace(/,/gi, '');
+		totm = totm.replace(/,/gi, '');
+
+		
+
+		$.post("?act=account",
+		{
+			pid: id,
+			j_cnt: jcnt,
+			i_cnt: icnt,
+
+			in_money: inm,
+			out_money: outm,
+
+			carry_money: carm,
+			calc_money: calm,
+
+			total_money: totm,
+
+			begin_time: btime,
+			end_time: etime
+		}, function(data, status)
+		{
+			
+		});
+	}
+}
+
+function go_del(url)
+{
+	if(confirm("정말 삭제하시겠습니까?"))
+	{
+		document.location = url;
+	}
+	else
+	{
+		return;
+	}
+}
+
+</script>
+
+<div class="wrap" id="partner_accounting">
+
+	<div id="route">
+		<h5>관리자 시스템 > 파트너 관리 > <b>총판 정산</b></h5>
+	</div>
+
+	<h3>총판 정산</h3>
+
+	<ul id="tab">
+		<li><a href="/partner/accounting" id="partner_accounting">정산 대기</a></li>
+		<li><a href="/partner/accounting_fin" id="partner_accounting_fin">정산 완료</a></li>
+	</ul>
+
+	<div id="search">
+		<div class="wrap">
+			<form action="?" method="GET" name="form2" id="form2">
+				<!-- 기간 필터 -->
+				<span class="icon">날짜</span>
+				
+				<input name="begin_date" type="text" id="begin_date" class="date" value="{begin_date}" maxlength="20" onclick="new Calendar().show(this);"/>&nbsp;~
+				<input name="end_date" type="text" id="end_date" class="date" value="{end_date}" maxlength="20" onclick="new Calendar().show(this);" />
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				
+				<!-- 총판 필터 -->
+				<select name="filter_partner_sn">
+					<option value="" {? filter_partner_sn==""} selected {/}>총판</option>
+					{@ partner_list}
+						<option value={.Idx} {? filter_partner_sn==.Idx} selected {/}>{.rec_id}</option>
+					{/}
+				</select>
+				
+				<!-- 검색버튼 -->
+				<input name="Submit4" type="image" src="/img/btn_search.gif" class="imgType" />
+			</form>
+		</div>
+	</div>
+
+	<form id="form1" name="form1" method="post" action="?act=delete_user">
+	<table cellspacing="1" class="tableStyle_normal" summary="정산 대기 목록">
+	<legend class="blind">정산 대기</legend>
+	<thead>
+		<tr>
+			<th scope="col">사이트</th>
+			<th scope="col">파트너</th>
+			<th scope="col">가입회원</th>
+			<th scope="col">입금회원</th>
+			<th scope="col">충전금액</th>
+			<th scope="col">환전금액</th>
+			<th scope="col">수익금액</th>
+			<th scope="col">이월금액</th>
+			<th scope="col">정산금액</th>
+			<th scope="col">웹게임포인트</th>
+			<th scope="col">스포츠포인트</th>
+			<th scope="col">총 정산금액</th>
+			<th scope="col">마지막 정산일</th>
+			<th scope="col">처리</th>
+		</tr>
+	</thead>
+	<tbody>	
+		{@ list }
+			{?.carried == 'a'}
+			<tr id="t_{.Idx}" style="background: eclipse;">
+			{:}
+			<tr id="t_{.Idx}">
+			{/}
+				<td>{? .logo=='totobang'}포텐{: .logo=='eclipse'}이클{: .logo=='poten2'}포텐2{/}</td>
+				<td><a href="javascript:open_window('/partner/memberDetails?idx={.Idx}',640,440)"><span class="t_pid">{.rec_id}</span> (<font color="red">{=number_format(.default_rate)}</font>%)</td>
+				<td><span class="t_jcount">{=number_format(.member_count, 0)}</span>명</td>
+				<td><span class="t_icount">{=number_format(.charge_count, 0)}</span>명</td>
+				<td><span class="t_inmoney">{=number_format(.charge_sum,0)}</span></td>
+				<td><span class="t_outmoney">{=number_format(.exchange_sum,0)}</span></td>
+				<td>
+					{?.charge_sum - .exchange_sum > 0}
+						<span style="font-weight: bold; color: blue;">{=number_format(.charge_sum - .exchange_sum,0)}</span>
+					{:}
+						<span style="font-weight: bold; color: red;">{=number_format(.charge_sum - .exchange_sum,0)}</span>
+					{/}
+				</td>
+				<td><span style="font-weight: bold; color: red;">{=number_format(list.carried, 0)}</span></td>
+				<td>
+					{?.default_rate > 0}
+						{?.charge_sum - .exchange_sum + .carried > 0}
+							<span class="t_calmoney" style="font-weight: bold; color: blue;">{=number_format((.charge_sum - .exchange_sum + .carried) / 100 * .default_rate,0)}</span>
+						{:}
+							<span class="t_carrymoney" style="font-weight: bold; color: red;">{=number_format(.charge_sum - .exchange_sum + .carried,0)}</span>
+						{/}
+					{:}
+						<s>해당없음</s>
+					{/}
+				</td>
+				<td>{=number_format(.rec_wb_account,0)}</td>
+				<td>{=number_format(.rec_sb_account,0)}</td>
+				<td style="background: crimson; color: yellow; font-weight: bold;">
+					{?.default_rate > 0}
+						{?.charge_sum - .exchange_sum + .carried > 0}
+							<span class="t_totalmoney">{=number_format((.charge_sum - .exchange_sum + .carried) / 100 * .default_rate, 0)}</span>
+						{:}
+							-
+						{/}
+					{:}
+						{=number_format(.rec_wb_account + .rec_sb_account,0)}
+					{/}
+				</td>
+				<td>
+				{?.carried == 'a'}
+				{:}
+					{.lastDate}
+				{/}
+				</td>
+				<td>
+				{?.carried == 'a'}
+				{:}
+				<a href="javascript:checkAccount({.Idx}, '{.rec_id}');"><img src="/img/btn_s_confirm2.gif" title="정산"></a>
+				{/}
+				</td>
+			
+			</tr>
+		{/}	
+	</tbody>
+	</table>
+	</form>
+
+	<div id="pages">
+		{pagelist}
+	</div>
+
+</div>

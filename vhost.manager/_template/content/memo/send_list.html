@@ -1,0 +1,135 @@
+<script>document.title = '회원관리-보낸 쪽지함';</script>
+
+<script>
+
+var number={? total>perpage} {perpage} {:} {total} {/};
+
+function LMYC() {
+var lbmc;
+    for (i=1;i<=number;i++) {
+        lbmc = eval('LM' + i);
+        lbmc.style.display = 'none';
+    }
+}
+
+function ShowFLT(i) {
+	lbmc='LM_'+i;
+  if ($('#'+lbmc).is(':visible')) {
+  	$('#'+lbmc).hide();
+  }
+  else {
+		$('#'+lbmc).show();
+  }
+}
+</script>
+
+<div class="wrap" id="members_smemo">
+
+	<div id="route">
+		<h5>관리자 시스템 > 회원 관리 > 쪽지 관리 > <b>보낸 쪽지함</b></h5>
+	</div>
+
+	<h3>보낸 쪽지함</h3>
+
+	<ul id="tab">
+		<li><a href="/memo/list" id="members_rmemo">받은쪽지함</a></li>
+		<li><a href="/memo/sendlist" id="members_smemo">보낸쪽지함</a></li>
+	</ul>
+
+	<div id="search">
+		<div class="wrap">
+			<form action="?" method="GET" name="form2" id="form2">
+
+				<!-- 키워드 검색 -->
+				<select name="field">
+					<option value="uid" 				{? field=="member_id"} selected {/}>아이디</option>
+					<option value="nick" 				{? field=="nick"} selected {/}>닉네임</option>
+					<option value="bank_member" {? field=="bank_member"} selected {/}>예금주</option>
+				</select>
+				<input name="keyword" type="text" id="key" class="name" value="{keyword}" maxlength="20" onmouseover="this.focus()"/>
+
+				<!-- 검색버튼 -->
+				<input name="Submit4" type="image" src="/img/btn_search.gif" class="imgType" title="검색" />
+			</form>
+		</div>
+	</div>
+
+	<div id="table_sort">
+		<form action="?" method="GET" name="form3" id="form3">
+			<span class="icon">출력</span><input name="perpage" type="text" id="perpage"  class="sortInput" onkeyup="if(event.keyCode !=37 && event.keyCode != 39) value=value.replace(/\D/g,'');" maxlength="3" value="{perpage}" onmouseover="this.focus()" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/\D/g,''))">
+			<input type="image" name="Submitok" src="/img/btn_s_sort.gif" class="imgType" title="정렬"/>
+		</form>
+	</div>
+
+	<form id="form1" name="form1" method="get" action="?">
+	<input type="hidden" name="act" value="del">
+	<table cellspacing="1" class="tableStyle_normal" summary="보낸 쪽지함">
+	<legend class="blind">보낸 쪽지함 - 제목</legend>
+	<thead>
+		<tr>
+			<th scope="col" class="check"><input type="checkbox" name="chkAll" title="전체선택" onClick="selectAll()"/></th>
+			<th width="5%" scope="col">사이트</th>
+			<th width="10%" scope="col">받는이</th>
+			<th width="10%" scope="col">닉네임</th>
+			<th width="10%" scope="col">예금주</th>
+			<th width="10%" scope="col">보낸이</th>
+			<th width="30%" scope="col">제목</th>
+			<th width="10%" scope="col">보낸 시간</th>
+			<th width="5%" scope="col">읽음</th>
+			<th width="5%" scope="col">상태</th>
+			<!--
+			<th width="20%" scope="col">처리</th>
+			-->
+		</tr>
+	</thead>
+	</table>
+	{@ list}
+		<table cellspacing="1" class="tableStyle_normal" summary="보낸 쪽지함">
+			<legend class="blind">보낸 쪽지함 - 내용</legend>
+			<tbody>
+				<tr onClick="javascript:ShowFLT({list.mem_idx})">
+					<td class="check"><input name="y_id[]" type="checkbox" id="y_id" value="{list.mem_idx}"  onclick="javascript:chkRow(this);"/></td>
+					<td width="5%">
+            <font color="{.logo_color}">{.logo_nick}</font>
+          </td>
+					<td width="10%">{list.toid}</td>
+					<td width="10%">{list.nick}</td>
+					<td width="10%">{list.bank_member}</td>
+					<td width="10%">{list.fromid}</td>
+					<td width="30%">{=mb_strimwidth(list.title, 0, 50, "..", "utf-8")}</td>
+					<td width="10%">{list.writeday}</td>
+					<td width="5%">
+						{? list.newreadnum==0}<font color='red'>안읽음</font>
+						{:}읽음
+						{/}
+					</td>
+					<td width="5%">
+						{? list.isdelete=='1'}<font color="blue">삭제</font>{/}
+					</td>
+				</tr>
+			</tbody>
+
+			<table id="LM_{list.mem_idx}" style="display:none" class="memo_answer" value='aa'>
+				<tr class="line">
+					<th valign="top">제목 :</th>
+					<td>{=mb_strimwidth(list.title, 0, 50, "..", "utf-8")}</td>
+				</tr>
+				<tr>
+					<th valign="top">내용 :</th>
+					<td>{list.content}</td>
+				</tr>
+		</table>
+	{/}
+	<div id="pages">
+		{pagelist}
+	</div>
+	<!--
+	<div id="wrap_btn">
+		<p class="left">
+			<input type="button" name="open" value="삭  제" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'"  onmouseout="this.className='Qishi_submit_a'" onclick="isChm()"/>
+		</p>
+	</div>
+	-->
+  </form>
+
+</div>

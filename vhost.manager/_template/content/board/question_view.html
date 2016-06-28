@@ -1,0 +1,166 @@
+
+<title>글 보기/쓰기</title>
+
+<script Language='Javascript'>
+function openNewWindow(msg)
+{
+	window.open("../memo/memowrite_acc.php?userid="+msg, "쪽지함", "scrollbars=yes,resizable=no,copyhistory=no,width=650,height=300");
+}
+ function check_reply() {
+	var frm = document.bbs;
+
+	if (frm.comment.value == "") {
+	   alert("내용을 쓰십시오!!!");
+	   frm.comment.focus();
+	   return false;
+	}
+
+	frm.submit();
+}
+function addChar(t) {
+	if(t=='qna_1')
+	{
+		var comment = $('#qna_1').val();
+		$('#comment').val(comment);
+		return;
+	}
+	if(t=='qna_2')
+	{
+		var comment = $('#qna_2').val();
+		$('#comment').val(comment);
+		return;
+	}
+	if(t=='qna_3')
+	{
+		var comment = $('#qna_3').val();
+		$('#comment').val(comment);
+		return;
+	}
+	if(t=='qna_4')
+	{
+		var comment = $('#qna_4').val();
+		$('#comment').val(comment);
+		return;
+	}
+	if(t=='qna_5')
+	{
+		var comment = $('#qna_5').val();
+		$('#comment').val(comment);
+		return;
+	}
+	if(t=='qna_6')
+	{
+		var comment = $('#qna_6').val();
+		$('#comment').val(comment);
+		return;
+	}
+}
+function goDel(delidx,idx)
+{
+	var result = confirm('삭제하시겠습니까?');
+	if(result){
+		location.href="?mode=del&delidx="+delidx+"&urlidx="+idx;
+	}
+}
+function sms(url){
+window.open(url,'','scrollbars=yes,width=200,height=250,left=100,top=100');
+}
+</script>
+</head>
+
+<body>
+
+<div class="wrap" id="question_list">
+
+	<div id="route">
+		<h5>관리자 시스템 > 게시판 관리 > <b>글 보기/수정</b></h5>
+	</div>
+
+	<h3>글 보기/수정</h3>
+
+	<ul id="tab">
+		<li><a href="/board/list?province=5" id="freeboard">자유게시판</a></li>
+		<li><a href="/board/list?province=2" id="notice">공지사항</a></li>
+		<li><a href="/board/list?province=7" id="event">이벤트</a></li>
+		<li><a href="/board/questionlist" id="question_list">고객센터</a></li>
+		<li><a href="/board/write" id="write">게시물 쓰기</a></li>
+		<li><a href="/board/site_rule_edit?type=1" id="member_rule">회원약관 수정</a></li>
+		<li><a href="/board/site_rule_edit?type=2" id="betting_rule">배팅규정 수정</a></li>
+	</ul>
+
+ 	<form name="bbs" action="?mode=add" method="post">
+ 		{@ list }
+		<input type="hidden" name="idx" value="{list.idx}">
+		<table cellspacing="1" class="tableStyle_membersWrite" summary="게시글 쓰기">
+		<legend class="blind">게시글 쓰기</legend>
+		<tr>
+	        <th>사이트</th>
+	        <td><p class="replyUse2">{list.logo_nick}</p>
+			</td>
+      </tr>
+	      <tr>
+	        <th>제목</th>
+	        <td><p class="replyUse2">{list.subject}</p>
+			</td>
+      </tr>
+      <tr>
+     		<th>아이디/닉네임/이름</th>
+     		<td><a href="javascript:open_window('/member/popup_detail?idx={list.sn}',1024,600)">[{list.uid}]::[{list.nick}]::[{list.bank_member}]</a></td>
+      </tr>
+      <tr>
+        <th>등급</th>
+        <td>{list.lev_name}</td>
+      </tr>
+      <tr>
+        <th>최종도메인</th>
+        <td>{list.login_domain}</td>
+      </tr>
+      <tr>
+        <th>은행명</th>
+        <td>{list.bank_name}</td>
+      </tr>
+		  <tr>
+	        <th>시간</th>
+	        <td>{list.question_regdate}</td>
+	      </tr>
+		  <tr>
+			<th>내용</th>
+	        <td>{list.content}</td>
+	    </tr>
+    {/ }
+		{@ sizeof(relist) > 0 }
+		  <tr>
+				<input type="hidden" name="upcontent" value="1">
+				<input type="hidden" name="qidx" value="{relist.idx}">
+				<th>답변</th>
+		    <td><textarea rows="6" cols="70" name="comment">{=str_replace("<br>", chr(13), relist.content)}</textarea>
+					<input type="button" name="ok"  value="답변" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'" onmouseout="this.className='Qishi_submit_a'" onclick="check_reply()">
+				</td>
+			</tr>
+		{:}
+			<th>답변</th>
+			<td bgcolor="#FFFFFF"><textarea rows="6" cols="70" name="comment" id='comment'>{=str_replace("<br>",chr(13),relist.content)}</textarea><input type="button" name="ok"  value="답변" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'" onmouseout="this.className='Qishi_submit_a'" onclick="check_reply()"></td>
+
+		{/}
+    </table>
+	 <input type=hidden name='qna_1' id='qna_1' value='{admin.qna_1}'/>
+	 <input type=hidden name='qna_2' id='qna_2' value='{admin.qna_2}'/>
+	 <input type=hidden name='qna_3' id='qna_3' value='{admin.qna_3}'/>
+	 <input type=hidden name='qna_4' id='qna_4' value='{admin.qna_4}'/>
+	 <input type=hidden name='qna_5' id='qna_5' value='{admin.qna_5}'/>
+	 <input type=hidden name='qna_6' id='qna_6' value='{admin.qna_6}'/>
+	<div id="wrap_btn">
+
+		<input type="button" onclick="JavaScript:addChar('qna_1');"  value="계좌답변" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'" onmouseout="this.className='Qishi_submit_a'">
+		<input type="button" value="업무지연멘트" onclick="JavaScript:addChar('qna_2');" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'" onmouseout="this.className='Qishi_submit_a'">
+		<input type="button" value="경기취소" onclick="JavaScript:addChar('qna_3');" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'" onmouseout="this.className='Qishi_submit_a'">
+		<input type="button" value="등록경기문의" onclick="JavaScript:addChar('qna_4');" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'" onmouseout="this.className='Qishi_submit_a'">
+		<input type="button" value="경기오류" onclick="JavaScript:addChar('qna_5');" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'" onmouseout="this.className='Qishi_submit_a'">
+		<input type="button" value="회원탈퇴멘트" onclick="JavaScript:addChar('qna_6');" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'" onmouseout="this.className='Qishi_submit_a'">
+	</div>
+  </form>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+<script>
+	function confirmOk()
+	{
+		fm = document.frm;		
+		if(fm.strGameEndTime1.value=="")
+		{
+			alert("마감 날짜를 입력해 주세요.");
+			fm.strGameEndTime1.focus();	
+		}
+		else if(fm.intMinBetPrice.value=="")
+		{
+			alert("최소 배팅금액을 입력해 주세요.");
+			fm.intMinBetPrice.focus();	
+		}
+		else
+		{
+			fm.action = "/game/addparentProcess";
+			fm.submit();
+		}	
+	}
+</script>
+
+<div id="wrap_pop">
+	<div id="pop_title">
+		<h1>게임 등록 및 수정</h1>
+		<p><img src="/img/btn_s_close.gif" onclick="window.close()" title="창닫기"></p>
+	</div>
+
+	<form name=frm method=post>
+	<input type="hidden" name="mode" value="{mode}">
+	<input type="hidden" name="backUrl" value="<?=$backUrl?>">
+	<input type="hidden" name="intParentIdx" value="{parentIdx}">
+	<input type="hidden" name="strGameType" value="{gameType}">
+	<table cellspacing="1" class="tableStyle_membersWrite">
+		<tr>
+			<th>회 차</th>
+			<td><input type="text" readonly size="3" value="{parentIdx}">회차
+		</tr> 
+		<tr>
+			<th>마감날짜</th>
+			<td>
+				<input name="strGameEndTime1" readonly="true" type="text" onclick='new Calendar().show(this);' value="{gameDate}" maxlength="20" class="inputStyle_date"/>
+				&nbsp;
+				<select name="strGameEndTime2">{
+					{@ hours}
+						<option value='{hours.value_}' {? hours.value_ == gameHour} selected {/}>{hours.value_}</option>
+					{/}
+					</select>&nbsp;시&nbsp;
+					<select name='strGameEndTime3'>
+						{@ mins }
+							<option value='{mins.value_}' {? mins.value_ == gameMin} selected {/}>{mins.value_}</option>
+						{/}			
+					</select>&nbsp;분
+			</td>
+		</tr>												
+		<tr>
+			<th>최소 베팅금액</th>
+			<td>
+				<input type="text" onkeyUp="javascript:this.value=FormatNumber(this.value);" name="intMinBetPrice" value="{=number_format(minBetPrice,0)}" size="10"> 원(숫자 입력)
+			</td>
+		</tr>
+		<tr>
+			<th>최대 배당금액</th>
+			<td><input type="text" onkeyUp="javascript:this.value=FormatNumber(this.value);" name="intMaxBetPrice" value="{=number_format(maxBetPrice,0)}" size="10"> 원(숫자 입력)</td>
+		</tr>
+	</table>
+
+	<div id="wrap_btn">
+		<input type="button" value="등록하기" onClick="confirmOk();" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'" onmouseout="this.className='Qishi_submit_a'";>
+		<input type="button" value="돌아가기" onclick="window.close()" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'" onmouseout="this.className='Qishi_submit_a'";>
+	</div>
+
+	</form>
+</div>
+

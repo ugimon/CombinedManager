@@ -1,0 +1,315 @@
+<script>document.title = '회원관리-회원목록';</script>
+
+<script>
+	function onStateClick()
+	{
+		var filter_state="";
+
+		$('#form2 input:checkbox').each(function(index)
+		{
+			if(this.name=='filter_member_state')
+			{
+				if(this.checked) 	{filter_state+="1";}
+				else							{filter_state+="0";}
+			}
+		});
+
+		$('#filter_state').val(filter_state);
+		//document.form2.submit();
+	}
+
+	function onLevelClick()
+	{
+		var filter_level="";
+
+		$('#form2 input:checkbox').each(function(index)
+		{
+			if(this.name=='filter_member_level')
+			{
+				if(this.checked)
+				{
+					filter_level+="1";
+				}
+				else
+				{
+					filter_level+="0";
+				}
+			}
+		});
+
+		$('#filter_level').val(filter_level);
+		//document.form2.submit();
+	}
+
+	function onDomainClick()
+	{
+		var filter="";
+
+		$('#form2 input:checkbox').each(function(index)
+		{
+			if(this.name=='domain')
+			{
+				if(this.checked)	{filter+="1";}
+				else							{filter+="0";}
+			}
+		});
+
+		$('#filter_domain').val(filter);
+		//document.form2.submit();
+	}
+
+	//유저의 등급, 상태 변경시 호출
+	function onMemberModifyState(member_sn, state)
+	{
+		document.form1.act.value="modify_state";
+
+		document.form1.modify_member_sn.value=member_sn;
+		document.form1.modify_state.value=state;
+		document.form1.submit();
+	}
+
+	function onMemberModifyLevel(member_sn, level)
+	{
+		document.form1.act.value="modify_level";
+		document.form1.modify_member_sn.value=member_sn;
+		document.form1.modify_level.value=level;
+		document.form1.submit();
+	}
+
+	function onMemberModifyDomain(member_sn, _domain)
+	{
+		document.form1.act.value="modify_domain";
+		document.form1.modify_member_sn.value=member_sn;
+		document.form1.modify_domain.value=_domain;
+		document.form1.submit();
+	}
+
+	function onSave(sn)
+	{
+		var member_sn			= sn;
+		var bank_member 	= $('#'+sn+'_bank_member').val();
+		var board_write_auth = $('#'+sn+'_board_write_auth').is(":checked");
+		var reply_write_auth = $('#'+sn+'_reply_write_auth').is(":checked");
+		var question_write_auth = $('#'+sn+'_question_write_auth').is(":checked");
+		var board_auth = "";
+		if(board_write_auth==true) board_auth+=0;
+		else														board_auth+=1;
+		if(reply_write_auth==true) board_auth+=0;
+		else														board_auth+=1;
+		if(question_write_auth==true) board_auth+=0;
+		else														board_auth+=1;
+
+		$('#modify_member_sn').val(member_sn);
+		$('#modify_bank_member').val(bank_member);
+		$('#modify_board_auth').val(board_auth);
+
+		document.form1.act.value="modify";
+		document.form1.submit();
+	}
+</script>
+
+<div class="wrap" id="members">
+	<div id="route">
+		<h5>관리자 시스템 > 회원 관리 > <b>회원목록</b></h5>
+	</div>
+
+	<h3>회원목록</h3>
+
+	<div id="search">
+		<form action="?" method="get" name="form2" id="form2">
+		<div class="wrap">
+			<span class="icon">사이트</span>
+				<select name="filter_logo">
+					<option value=""  {? filter_logo==""}  selected {/}>전체</option>
+					{@ logolist}
+					<option value={.name} {? filter_logo==.name} selected {/}>{.nick}</option>
+					{/}
+				</select>
+			<span class="icon">출력</span>
+			<input name="perpage" type="text" id="perpage"  class="sortInput" onkeyup="if(event.keyCode !=37 && event.keyCode != 39) value=value.replace(/\D/g,'');" maxlength="3" size="5" value="{perpage}" onmouseover="this.focus()">
+
+			<!-- 정렬 방법 -->
+			<select name="sort_field">
+				<option value="" 				{? sort_field==""} selected {/}>::정렬</option>
+				<option value="regdate" {? sort_field=="regdate"} selected {/}>가입일시</option>
+				<option value="g_money" {? sort_field=="g_money"} selected {/}>보유머니</option>
+				<option value="virtual_money" {? sort_field=="virtual_money"} selected {/}>가상머니</option>
+				<option value="benefit" {? sort_field=="benefit"} selected {/}>회원수익</option>
+				<option value="visit_count" {? sort_field=="visit_count"} selected {/}>접속횟수</option>
+				<option value="recent_visit" {? sort_field=="recent_visit"} selected {/}>최근 접속일</option>
+			</select>
+
+			<!-- 오름,내림차순 -->
+			<select name="sort_type">
+				<option value="desc"	{? sort_type=="desc"} selected {/}><b>↑</b></option>
+				<option value="asc"		{? sort_type=="asc"}  selected {/}><b>↓</b></option>
+			</select>
+
+			<!-- 총판 필터 -->
+			<select name="filter_partner_sn">
+				<option value="" {? filter_partner_sn==""} selected {/}>총판</option>
+				{@ partner_list}
+					<option value={.Idx} {? filter_partner_sn==.Idx} selected {/}>{.rec_id}</option>
+				{/}
+			</select>
+
+			<!-- 키워드 검색 -->
+			<select name="field">
+				<option value="mem_id" 	{? field=="mem_id"}	selected {/}>아이디</option>
+				<option value="nick"  	{? field=="nick"}		selected {/}>닉네임</option>
+				<option value="bank_member" {? field =="bank_member"} selected {/}>예금주</option>
+				<option value="join_recommend" {? field =="join_recommend"} selected {/}>추천인</option>
+				<option value="mem_ip"  {? field =="mem_ip"}	selected {/}>IP</option>
+			</select>
+			<input name="keyword" type="text" id="key" class="name" value="{keyword}" maxlength="20" onmouseover="this.focus()"/>
+
+			<!-- 검색버튼 -->
+			<input name="Submit4" type="image" src="/img/btn_search.gif" class="imgType" title="검색" />
+		</div>
+		<div class="wrap_search">
+
+		  <span class="icon">상태</span>
+		  <input type="hidden" 	 name="filter_state" id="filter_state" value="{filter_member_state}" class="radio">
+		  <input type="checkbox" name="filter_member_state" value='S' {? substr(filter_member_state,0,1)=='1' } checked{/} onClick="onStateClick();" class="radio"> 정지
+		  <input type="checkbox" name="filter_member_state" value='N' {? substr(filter_member_state,1,1)=='1' } checked{/} onClick="onStateClick();" class="radio"> 정상
+		  <input type="checkbox" name="filter_member_state" value='G' {? substr(filter_member_state,2,1)=='1' } checked{/} onClick="onStateClick();" class="radio"> 테스트
+		  <input type="checkbox" name="filter_member_state" value='W' {? substr(filter_member_state,3,1)=='1' } checked{/} onClick="onStateClick();" class="radio"> 심사
+		  &nbsp;&nbsp;&nbsp;&nbsp;
+
+		  <!-- 회원등급 -->
+		  <input type="hidden" 	 name="filter_level" id="filter_level" value="{filter_level}">
+		  <span class="icon">등급</span>
+		  {@ config_rows}
+				<input type="checkbox" name="filter_member_level" value='{.lev}' {? substr(filter_level,config_rows.index_,1)=='1' } checked{/} onClick="onLevelClick();" class="radio"> {.lev_name}
+		  {/}
+		  <br>
+		</div>
+		</form>
+	</div>
+
+	<form id="form1" name="form1" method="post" action="?">
+		<input type="hidden" id="act" name="act" value="delete">
+		<input type="hidden" name="perpage" value="{perpage}">
+		<input type="hidden" name="sort_field" value="{sort_field}">
+		<input type="hidden" name="sort_type" value="{sort_type}">
+		<input type="hidden" name="filter_partner_sn" value="{filter_partner_sn}">
+		<input type="hidden" name="field" value="{field}">
+		<input type="hidden" name="keyword" value="{keyword}">
+		<input type="hidden" name="filter_state" value="{filter_member_state}">
+		<input type="hidden" name="filter_level" value="{filter_level}">
+		<input type="hidden" name="filter_domain" value="{filter_domain}">
+		<input type="hidden" name="page" value="{current_page}">
+
+		<input type="hidden" id="modify_bank_name" name="modify_bank_name" value="">
+		<input type="hidden" id="modify_bank_account" name="modify_bank_account" value="">
+		<input type="hidden" id="modify_bank_member" name="modify_bank_member" value="">
+		<input type="hidden" id="modify_phone" name="modify_phone" value="">
+		<input type="hidden" id="modify_state" name="modify_state" value="">
+		<input type="hidden" id="modify_level" name="modify_level" value="">
+		<input type="hidden" id="modify_domain" name="modify_domain" value="">
+		<input type="hidden" id="modify_member_sn" name="modify_member_sn" value="">
+		<input type="hidden" id="modify_board_auth" name="modify_board_auth" value="">
+
+		<table cellspacing="1" class="tableStyle_members" summary="회원목록">
+		<legend class="blind">회원목록</legend>
+		<thead>
+	    <tr>
+			<th scope="col" class="check"><input type="checkbox" name="chkAll" title="전체선택" onClick="selectAll()"/></th>
+			<th scope="col" class="id" id="user_idx">사이트/아이디</th><!--ID-->
+			<th scope="col">이름/닉네임</th>
+			<th scope="col">보유머니/마일리지</th>
+			<th scope="col">가상머니</th>
+			<th scope="col">등급</th>
+			<th scope="col">입금/출금</th>
+			<th scope="col">진행 배팅액</th>
+			<th scope="col">회원수익</th>
+			<th scope="col">상태</th>
+			<th scope="col">가입(날짜/도메인)</th>
+			<th scope="col">최근(날짜/도메인)</th>
+			<th scope="col">접속(IP/도메인)</th>
+			<th scope="col">추천인</th>
+			<th scope="col">총판</th>
+			<th scope="col">진상관리</th>
+			<th scope="col" class="lineRow">수정</th>
+	    </tr>
+		</thead>
+		<tbody>
+			{@ list}
+				<tr bgcolor={list.bgColor}>
+					<td rowspan="2"><input name="y_id[]" type="checkbox" id="y_id" value="{.sn}"  onclick="javascript:chkRow(this);"/></td>
+					<td title="상세정보"><a href="javascript:open_window('/member/popup_detail?idx={.sn}',1024,600)">{list.uid}</a></td>
+					<td><input style="width:80px" type="text" id="{.sn}_bank_member" value="{list.bank_member}"></td>
+					<td title="머니내역"><a href="javascript:open_window('/log/popup_moneyloglist?uid={.uid}',1000,600)"><font color='green'>{=number_format(list.g_money,0)}</font></a></td>
+					<td rowspan="2"><font color='green'>{=number_format(list.virtual_money,0)}</font></td>
+					<td rowspan="2">
+						<select style="width:50px" name="lev" onChange="onMemberModifyLevel({.sn}, this.value);">
+						{@ level_type}
+							<option value="{..lev}" {? .mem_lev==..lev}selected{/}>{..lev_name}</option>
+						{/}
+						</select>
+					</td>
+					<td title="강제충환전"><a href="javascript:open_window('/member/popup_moneychange?idx={.sn}&act=money',400,250)"><font color='blue'>{=number_format(list.charge_sum,0)}</font></a></td>
+					<td rowspan="2" title="배팅내역""><a href="javascript:void(0)" onclick="open_window('/member/popup_bet?mem_sn={.sn}',1024,600)">{=number_format(list.bet_total,0)}</a></td>
+					<td rowspan="2">{=number_format(list.benefit)}</td>
+					<td rowspan="2">
+							<select style="width:50px" name="mem_status" onChange="onMemberModifyState({.sn}, this.value);">
+								<option value="N" {? list.mem_status=='N'} selected {/}>정상</option>
+								<option style="color:blue" value="W" {? list.mem_status=='W'} selected {/}>심사</option>
+								<option style="color:red" value="S" {? list.mem_status=='S'} selected {/}>정지</option>
+								<option style="color:gray" value="G" {? list.mem_status=='G'} selected {/}>테스터</option>
+							</select>
+					</td>
+					<td>{list.regdate}</td>
+					<td>{list.last_date}</td>
+					<td title="접속내역">
+						<a href="javascript:open_window('/member/popup_loginlist?field=member_id&username={list.uid}',1000,600)">[{list.country_code}]{list.mem_ip}</a>
+					</td>
+					<td title="추천인상세정보"><a href="javascript:open_window('/member/popup_detail?idx={.join_recommend_sn}',1024,600)">{list.join_recommend_nick}</a></td>
+					<td>{list.rec_name}</td>
+					<td>
+						게&nbsp;/&nbsp;댓&nbsp;/&nbsp;고
+					</td>
+					<td rowspan="2"><input type="button" class="btnStyle3" value="적용" onclick="onSave({.sn});"/></a></td>
+				</tr>
+				<tr bgcolor={list.bgColor}>
+					<td>
+						<font color="{.logo_color}">{.logo_nick}</font>
+					</td>
+					<td title="쪽지쓰기"><a href="javascript:open_window('/memo/popup_write?userid={.uid}&logo={list.logo}',1024,600)">{list.nick}</a></td>
+					<td title="마일리지내역"><a href="javascript:open_window('/log/popup_mileageloglist?uid={.uid}',1000,600)">{=number_format(list.point,0)}</a></td>
+					<td><font color='red'>{=number_format(list.exchange_sum,0)}</font></td>
+					<td>{list.reg_domain}</td>
+					<td>{list.login_domain}</td>
+					<td>
+						<select style="width:100px" name="permit_domain" onChange="onMemberModifyDomain({.sn}, this.value);">
+							{@ permit_domain_list}
+								<option value="{..url}" {? .permit_domain==..url}selected{/}>{..url}</option>
+							{/}
+						</select>
+						<font color="red">[{list.visit_count}]</font>
+					</td>
+					<td>{list.join_recommend_bank_member}</td>
+					<td>{list.rec_id}</td>
+					<td>
+						<input type="checkbox" id="{.sn}_board_write_auth" {? substr(list.memo,0,1)=="0"} checked {/}>
+						<input type="checkbox" id="{.sn}_reply_write_auth"{? substr(list.memo,1,1)=="0"} checked {/}>
+						<input type="checkbox" id="{.sn}_question_write_auth"{? substr(list.memo,2,1)=="0"} checked {/}>
+					</td>
+				</tr>
+			{/}
+		</tbody>
+		</table>
+		<div id="pages">
+			{pagelist}
+		</div>
+		<div id="wrap_btn">
+			<p class="left">
+				<input type="button" name="open" value="회원등록" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'"  onmouseout="this.className='Qishi_submit_a'" onclick="window.location.href='/member/add'"/>
+				<input type="button" name="open" value="회원정지" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'"  onmouseout="this.className='Qishi_submit_a'" onclick="userStatusChange('stop')"/>
+				<input type="button" name="open" value="회원탈퇴" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'"  onmouseout="this.className='Qishi_submit_a'" onclick="userStatusChange('delete')"/>
+			</p>
+		</div>
+		<span id="op1"></span>
+	</form>
+
+</div>

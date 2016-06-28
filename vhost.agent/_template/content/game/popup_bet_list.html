@@ -1,0 +1,210 @@
+<script language="JavaScript">
+		
+	function on_change()
+	{
+		selvalue=document.getElementById("sel_result").value;
+		//alert(selvalue);
+		url="/game/popup_bet_list?mode=search&sel_result="+selvalue+"&child_sn={child_sn}&select_no={select_no}";
+		document.location=url;
+	}
+	function go_delete(url)
+	{
+		if(confirm("정말 삭제하시겠습니까?  "))
+		{
+			document.location = url;
+		}
+		else
+		{
+			return;
+		}
+	}
+	
+	function toggle(id)
+	{
+		$( "#"+id ).slideToggle(100);
+	}	
+	
+	function betting_view(url)
+	{
+		var newwindow = window.open(url,'','width=900,height=300,left=50,scrollbars=yes');
+	}
+	
+	function onKeywordChange(frm)
+	{
+		if(frm.select_keyword.value=='')
+		{
+			frm.keyword.value='';
+			frm.submit();
+		}
+	}
+	
+	function onExceptionBetClick(sn)
+	{
+		if(confirm("[적특] 처리하시겠습니까?"))
+		{
+			document.location = "/game/exceptionBetProcess?sn="+sn;
+		}
+	}
+</script>
+
+</head>
+
+<body>
+
+<div class="wrap">
+	<div id="search">
+		<form action="?" method="GET" name="form3" id="form3">
+			<input type="hidden" name="child_sn" value="{child_sn}">
+			<input type="hidden" name="select_no" value="{select_no}">
+			<div class="wrap">
+				<input type="hidden" name="mode" value="search">
+				<span>정렬</span>
+				<select name="page_size" onchange="submit()">
+					<option value="30"  {? perpage==30}  selected {/}>30</option>
+					<option value="50"  {? perpage==50}  selected {/}>50</option>
+					<option value="100" {? perpage==100} selected {/}>100</option>
+				</select>
+				<span>구분</span>
+				<select id="sel_result" name="sel_result" onchange="on_change()">
+					<option value="9">전체</option>
+					<option value="1" {? sel_result=="1"} selected {/}>당첨</option>
+					<option value="2" {? sel_result=="2"} selected {/}>낙첨</option>
+					<option value="0" {? sel_result=="0"} selected {/}>경기중</option>
+				</select>
+				<input type="radio" name="show_detail" value=0 {? show_detail=='0'}checked{/} onClick="submit()" class="radio">숨기기
+				<input type="radio" name="show_detail" value=1 {? show_detail=='1'}checked{/} onClick="submit()" class="radio">펼치기
+			</div>
+			<!--
+			<div class="wrap">
+				<span>총배팅액 : <font color=blue>{=number_format(sumList.total_betting,0)}원</font></span> 
+				<span>배당액 : <font color=blue>{=number_format(sumList.total_result,0)}원</font></span>
+				<span>정산액 : <font color="blue">{=number_format(sumList.total_betting-sumList.total_result,0)}원</font></span>
+			</div>
+			-->
+		
+		<!--검색-->
+			<div class="wrapRight">
+				<input type='hidden' name='mode' value='search'>
+				<span>검색</span>
+				<select name="select_keyword" onChange="onKeywordChange(this.form)">
+					<option value="" 	{? select_keyword==''}  selected {/}>전체</option>
+					<option value="uid" {? select_keyword=='uid'}  selected {/}>아이디</option>
+					<option value="nick"{? select_keyword=='nick'}  selected {/}>닉네임</option>
+					<option value="betting_no"{? select_keyword=='betting_no'}  selected {/}>배팅번호</option>
+				</select>
+				<input type="text" name="keyword" value={keyword}>
+				<input name="Submit4" type="submit"  value="검색" class="btnStyle3"/>
+			</div>
+		</form>
+	</div>
+			
+  <form id="form1" name="form1" method="post" action="?act=delete_user">
+		<table border="0" cellspacing="1" class="tableStyle_gameList" summary="게임별 배팅현황">
+		<thead>
+			<tr>					
+				<th>배팅번호</th>
+				<th>아이디</th>
+				<th>닉네임</th>
+				<th>게임</th>
+				<th>배팅금액</th>
+				<th>배당율</th>
+				<th>예상배당</th>
+				<th>게임결과</th>
+				<th>당첨금액</th>					
+				<th>배팅날짜</th>
+				<th>총판</th>
+				<th>배팅취소</th>
+				<th>배팅IP</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- 12.10.30 "종료" (list.blnGameEnd=="Y") 경우 tr class="gameEnd" / "진행중" 경우 tr class="gameGoing" -->
+		{@ list }
+			{? list.aresult== 0}
+			<tr id="t_{.betting_no}" class="gameGoing" >
+			{:}	
+			<tr id="t_{.betting_no}" class="gameEnd" >
+			{/}
+				<td onclick="toggle('d_{.betting_no}')">{list.betting_no}</td>			    
+				<td><a href="javascript:open_window('/member/popup_detail?idx={list.member_sn}',1024,600)">{list.uid}</a></td>					
+				<td onclick="toggle('d_{.betting_no}')">{list.nick}</td>				    
+				<td onclick="toggle('d_{.betting_no}')">{list.win_count}/{list.betting_cnt}</td>
+				<td onclick="toggle('d_{.betting_no}')">{=number_format(list.betting_money,0)}</td>
+				<td onclick="toggle('d_{.betting_no}')">{list.result_rate}</td>
+				<td onclick="toggle('d_{.betting_no}')">{=number_format(list.result_rate*list.betting_money,0)}</td>
+				<td onclick="toggle('d_{.betting_no}')">
+					{? list.aresult==1}<font color=red>적  중</font>
+					{: list.aresult==2}실  패
+					{: list.aresult==4}적  특
+					{:}경기중
+					{/}
+				</td>
+				<td onclick="toggle('d_{.betting_no}')">{=number_format(list.result_money,0)}</td>
+				<td onclick="toggle('d_{.betting_no}')">{list.regDate}</td> 
+				<td onclick="toggle('d_{.betting_no}')">{list.rec_id}</td> 
+				<td><input type="button" value="취소"  class="btnStyle3" onClick="go_delete('/game/betcancelProcess?betting_no={list.betting_no}&oper=race')"></td>
+				<td>{.betting_ip}</td>
+			</tr>
+			<tr id="d_{list.betting_no}" {? show_detail==0}style="display:none;"{/} class="gameDetail">
+				<td colspan="12">
+					<table cellspacing="1" id="d_{list.betting_no}">
+						<tr>				  
+							<th>게임타입</th>
+							<th>경기시간</th>
+							<th>리그</th>
+							<th colspan="2" >홈팀</th>
+							<th>무</th>
+							<th colspan="2">원정팀</th>
+							<th>점수</th>
+							<th>결과</th>
+							<th>상태</th>
+							<th width=10>적특</th>
+						</tr>
+						{@ item }
+							<tr bgcolor="#ede8e8" border=1>				
+								<td width="60" align="center" style="border-bottom:1px #CCCCCC solid;color: #666666">
+									{? ..game_type==1}[승무패]
+									{: ..game_type==2}[핸디캡]
+									{: ..game_type==3}[홀짝]
+									{: ..game_type==4}[언더오버]
+									{/}
+								</td>
+								<td width="105" align="center" style="border-bottom:1px #CCCCCC solid;color: #666666">{..g_date}</td>
+								<td width="100" align="center" style="border-bottom:1px #CCCCCC solid;color: #666666">{..league_name}</td>
+								<td width="100" align="" style="border-bottom:1px #CCCCCC solid;color: #666666? {?..select_no==1};background :#fff111{/}">{..home_team}</td>
+								<td width="20" align="" style="border-bottom:1px #CCCCCC solid;color: #666666{?..select_no==1};background :#fff111{/}">{..home_rate}</td>
+								<td width="60" align="center" style="border-bottom:1px #CCCCCC solid;color: #666666{?..select_no==3};background :#fff111{/}">{..draw_rate}</td>
+								<td width="20" align="" style="border-bottom:1px #CCCCCC solid;color: #666666{?..select_no==2};background :#fff111{/}">{..away_rate}</td>
+								<td width="100" align="" style="border-bottom:1px #CCCCCC solid;color: #666666{?..select_no==2};background :#fff111{/}">{..away_team}</td>
+								<td width="40" align="center" style="border-bottom:1px #CCCCCC solid;color: #666666">{..home_score}:{..away_score}</td>
+								<td width="50" align="center" style="border-bottom:1px #CCCCCC solid;color: #666666">
+									{? ..win == 1}[홈승]
+									{: ..win == 3}[무승부]
+									{: ..win == 2}[원정승]
+									{: ..win == 4}[취소]
+									{:}[대기]
+									{/}
+								</td>
+								<td width="65" align="center" style="border-bottom:1px #CCCCCC solid;color: #666666">
+									{? ..result == 0}<font color=#666666>경기중</font>
+									{: ..result == 1}<font color=red>적중</font>
+									{: ..result == 2}<font color=blue>낙첨</font>
+									{: ..result == 4}<font color=green>취소</font>
+									{/}
+								</td>
+								<td><input type="button" value="적특"  class="btnStyle3" onClick="onExceptionBetClick({..total_betting_sn});"></td>
+							</tr>															
+						{/}
+						</table>
+				</td>
+			</tr>
+		{/}	
+		</tbody>
+		</table>
+		
+			
+		<div id="pages">
+			{pagelist}
+		</div>
+	</form>
+</div>

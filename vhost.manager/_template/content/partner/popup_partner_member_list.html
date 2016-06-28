@@ -1,0 +1,51 @@
+<div class="wrap">
+	<div id="route">
+		<h5>관리자 시스템 > 총판 관리 > <b>총판 회원목록</b></h5>
+	</div>
+
+	<h3>{partner_name} 총판 회원목록</h3>
+		<table cellspacing="1" class="tableStyle_members" summary="총판 회원목록">
+		<thead>
+			<tr>
+				<th scope="col">ID</th>
+				<th scope="col">닉네임</th>
+				<th scope="col">보유금액</th>						
+				<th scope="col">회원등급</th>
+				<th scope="col">가입일</th>
+				<th scope="col">가입IP</th>
+				<th scope="col">상태</th>
+				<th scope="col">입금</th>
+				<th scope="col">출금</th>
+				<th scope="col">배팅</th>
+			</tr>
+		</thead>
+		<tbody>
+			{@ list}
+			<tr>
+				<td>{list.uid}</td>
+				<td>{list.nick}</td>
+				<td>{=number_format(list.g_money,0)}원</td>
+				<td>{arr_mem_lev[list.mem_lev]}</td>
+				<td>{list.regdate}</td>
+				<td>{list.mem_ip}</td>
+				<td>
+					{? list.mem_status == 'N'}정상
+					{: list.mem_status == 'S'}정지
+					{: list.mem_status == 'B'}불량
+					{: list.mem_status == 'W'}신규
+					{: list.mem_status == 'D'}탈퇴
+					{: list.mem_status == 'G'}테스터
+					{/}
+				</td>
+				<td>{=number_format(list.charge_money,0)}원</td>
+				<td>{=number_format(list.exchange_money,0)}원</td>
+				<td>{=number_format(list.bet_money,0)}원</td>
+			</tr>
+			{/}
+		</tbody>
+		</table>
+		
+	<div id="pages">
+		{pagelist}
+	</div>
+</div>

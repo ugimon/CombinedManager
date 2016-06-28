@@ -1,0 +1,103 @@
+<?php
+	include_once("../include/common.php");
+	$act=$_REQUEST["act"];
+	$idx=$_REQUEST["idx"];
+	If ($act == "del") {//删除
+		$sql="select P_FILE from ".$db_qz."popup where logo='".$logo."' and IDX=".$idx."";
+		$db->mysql=$sql;
+		$db->getresule();
+		if($db->getrow())
+		{
+			if(file_exists("../../user/upload/popup/".$db->row["P_FILE"]))
+			{
+				unlink("../../user/upload/popup/".$db->row["P_FILE"]);
+			}
+		}
+		$sql = "delete from ".$db_qz."popup where logo='".$logo."' and IDX = '".$idx."'";
+		$db->mysql=$sql;
+		$db->getresule();
+	}
+	$sql="SELECT  * FROM ".$db_qz."POPUP  where logo='".$logo."' order by IDX desc ";
+	$db->mysql=$sql;
+	$db->getresule();
+?>
+
+<script type="text/javascript" src="/js/is_show.js"></script>
+<script Language='Javascript'>
+function goDel(idx){
+	var result = confirm('삭제하시겠습니까?');
+	if(result){
+		location.href="?act=del&idx="+idx;
+	}	
+}
+</script>
+
+<div class="wrap" id="popup">
+
+	<div id="route">
+		<h5>관리자 시스템 > 시스템 관리 > <b>팝업 설정</b></h5>
+	</div>
+
+	<h3>팝업 설정</h3>
+
+	<ul id="tab">
+		<li><a href="/popup/list" id="popup">팝업창 목록</a></li>
+		<li><a href="/popup/add" id="popup_add">팝업창 추가</a></li>
+	</ul>
+
+	<form id="form1" name="form1" method="post" action="?act=del_ad">
+	<table cellspacing="1" class="tableStyle_normal add" summary="팝업창 목록">
+	<legend class="blind">팝업창 목록</legend>
+	<thead>
+		<tr>
+			<th>유형</th>
+			<th>제목</th>
+			<th>링크주소</th>
+			<th>위치</th>
+			<th>추가날짜</th>
+			<th>유효기간</th>
+			<th>처리</th>
+		</tr>
+	</thead>
+	<tbody>
+	<?php
+		while($db->getrow()){
+			$IDX=$db->row["IDX"];
+			$P_SUBJECT=$db->row["P_SUBJECT"];
+			$P_CONTENT=$db->row["P_CONTENT"];
+			$P_POPUP_U=$db->row["P_POPUP_U"];
+			$P_WRITEDAY=$db->row["P_WRITEDAY"];
+			$P_STARTDAY=$db->row["P_STARTDAY"];
+			$P_ENDDAY=$db->row["P_ENDDAY"];
+			$P_WIN_WIDTH=$db->row["P_WIN_WIDTH"];
+			$P_WIN_HEIGHT=$db->row["P_WIN_HEIGHT"];
+			$P_WIN_LEFT=$db->row["P_WIN_LEFT"];
+			$P_WIN_TOP=$db->row["P_WIN_TOP"];
+			$P_MOVEURL=$db->row["P_MOVEURL"];
+			$P_FILE=$db->row["P_FILE"];
+			$ckpfile=$P_FILE;
+			$P_STYLE=$db->row["P_STYLE"];
+			if($P_POPUP_U=="Y"){
+				$P_POPUP_U="yes";
+			}else{
+				$P_POPUP_U="no";
+			}
+	?>
+		<tr>
+			<td>이미지</td>
+			<td>
+				<span  onmousemove="showpup('<?=$P_SUBJECT?>')" onmouseout="hidepup()" ><?=csubstr($P_SUBJECT,0,10)?></span>
+				<?php if($ckpfile==""){echo "";}else{ ?><img src="../images/photo.gif" width="16" height="16" border="0" align="absmiddle"  onmousemove="showpup('<img src=../../user/upload/popup/<?=$P_FILE?>  border=0  align=absmiddle>')" onmouseout="hidepup()" /><?php }?>		
+			 </td>
+			<td class="subject" onmousemove="showpup('<?=$P_MOVEURL?>')" onmouseout="hidepup()"><?php if($P_MOVEURL==""){echo "&nbsp;";}else{ echo csubstr($P_MOVEURL,0,20);}?></td>
+			<td>x:<?=$P_WIN_LEFT?>  y:<?=$P_WIN_TOP?> w:<?=$P_WIN_WIDTH?> h:<?=$P_WIN_HEIGHT?></td>
+			<td><?=substr($P_WRITEDAY,0,10)?></td>
+			<td><?=$P_STARTDAY?>~<?=$P_ENDDAY?></td>
+			<td><a href="/popup/add?act=edit&idx={IDX}"><img src="/img/btn_s_modify.gif" title="수정"></a><a href="javascript:goDel({IDX})" ><img src="/img/btn_s_del.gif" title="삭제"></a></td>
+		</tr>
+	</tbody>
+	  <?php } ?>
+	</table>
+	</form>
+
+</div>

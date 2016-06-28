@@ -1,0 +1,94 @@
+<script>
+	function go_del(url)
+	{
+		if(confirm("정말 삭제하시겠습니까?  "))
+		{
+				document.location = url;
+		}
+		else
+		{
+			return;
+		}
+	}
+	
+	function changeView_style()
+	{
+		
+	}
+</script>
+	
+	<div id="route">
+		<h5>관리자 시스템 - 리그관리</h5>
+	</div>
+	<h3>리그관리</h3>
+
+	<div id="search2">
+		<form action="?" method="get" name="form2" id="form2">
+		<div>
+			<!-- 종목 -->
+			<span>종목</span>
+			<select name="category" onChange="submit();">
+			<option value="">종목명</option>
+			{@ category_list}
+				<option value={.name} {? category==.name} selected{/}>{.name}</option>
+			{/}
+			</select>
+			
+			<!-- 리그 -->
+			<span class="icon">리그명</span>
+			<input name="username" type="text" class="name" value="<?=$nname?>" maxlength="20" onmouseover="this.focus()"/>
+			<input name="Submit4" type="image" src="/img/btn_search.gif" class="imgType" title="검색" />
+		</div>
+		</form>
+	</div>
+
+	<form id="form1" name="form1" method="get" action="?">
+		<input type="hidden" name="act" value="del">
+		<table cellspacing="1" class="tableStyle_normal add">
+			<legend class="blind">등록 리그 목록</legend>
+			<thead>
+			<tr>
+			  <th class="check"><input type="checkbox" name="chkAll" onClick="selectAll()"/></th>
+			  <th>번호</th>
+			  <th>리그이미지</th>
+			  <th>종목</th>
+			  <th>리그명</th>
+			  <th>포텐2일</th>
+			  <th>7m 리그명</th>
+			  <th>처리</th>
+			</tr>
+			</thead>
+			<tbody>
+				{@ list }
+					<tr>
+						<td><input name="y_id[]" type="checkbox" id="y_id" value="{.sn}" onclick="javascript:chkRow(this);"/></td>
+						<td>{.sn}</td>
+						<td title="{list.name}"><img src="{UPLOAD_URL}/upload/league/{list.lg_img}" border="0" width="40" height="30"></td>
+						<td>{list.kind}</td>
+						<td>{list.name}</td>
+						<td>
+								{? list.view_style=='0'}초록색
+								{: list.view_style=='1'}형광색
+								{: list.view_style=='2'}하늘색
+								{: list.view_style=='5'}TOP경기
+								{: list.view_style=='10'}링크리그
+								{:}일반{/}
+						</td>
+						<td>{list.alias_name}</td>
+						<td>
+							<a href="#" onclick="window.open('/league/popup_edit?league_sn={.sn}','','scrollbars=yes,width=600,height=400,left=5,top=0');"><img src="/img/btn_s_modify.gif" title="수정"></a>
+							<a href="#" onclick="go_del('/league/list?act=delete&idx={.sn}');" ><img src="/img/btn_s_del.gif" title="삭제"></a>
+						</td>
+					 </tr>
+				{/}
+			</tbody>
+		</table>
+		<div id="pages2">
+			{pagelist}
+		</div>
+		<div id="wrap_btn">
+			<input type="button" name="box" value="리그등록" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'"  onmouseout="this.className='Qishi_submit_a'"  onclick="window.open('/league/popup_add','','scrollbars=yes,width=600,height=400,left=5,top=0');">
+			<input type="button" name="open" value="삭  제" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'"  onmouseout="this.className='Qishi_submit_a'" onclick="isChm()"/>
+		</div>
+	</form>
+	   

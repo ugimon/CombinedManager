@@ -1,0 +1,331 @@
+<script>document.title = '게임관리-게임관리';</script>
+
+<script>
+	function addall()
+	{
+		var intChildIdx="";
+		var   c   =   document.getElementsByName("intChildIdx");   
+		for(i=0;i<c.length;i++)   
+		{   
+			if(c[i].checked == true )   
+		    {   
+				var val=c[i].value;
+				var rate1=document.getElementById(val+"_rate1").value;
+				var rate3=document.getElementById(val+"_rate3").value;
+				if(rate1=="0.00" || rate3=="0.00")
+				{
+					alert(val+" -  배당이 틀립니다.확인하세요.");
+					return;
+				}
+		        intChildIdx += c[i].value+"\,";   
+			}   
+		} 
+		if(intChildIdx.length>0)
+		{
+			intChildIdx=intChildIdx.substring(0,(intChildIdx.length)-1);  	
+			url="/game/modifyStausProcess?mode=edit&idx="+intChildIdx+"&play=0";
+			team_betting(url);		
+		}
+		else
+		{
+			alert("발매경기를 선택!");
+		 	return;
+		 }
+	}
+	
+	function delall()
+	{
+		var intChildIdx="";
+		var   c   =   document.getElementsByName("intChildIdx");   
+		for(i=0;i<c.length;i++)   
+		{   
+		      if(c[i].checked == true )   
+		      {   
+		                intChildIdx += c[i].value+"\,";   
+		      }   
+		 } 
+		 if(intChildIdx.length>0)
+		 {
+			 intChildIdx=intChildIdx.substring(0,(intChildIdx.length)-1);  				
+			 document.location="/game/delchildProcess?idx="+intChildIdx+"&type={type}";
+			
+		 }else
+		 {
+		 	alert("발매경기를 선택!");
+		 	return;
+		 }
+	}
+	function checkAll()
+	{
+		var   c   =   document.getElementsByName("intChildIdx");
+		for( i=0;i<c.length;i++)
+		{
+			c[i].checked=true;
+		}  
+	}
+	function clearAll()
+	{
+		var   c   =   document.getElementsByName("intChildIdx");
+		for(i=0;i<c.length;i++)
+		{
+		    
+			c[i].checked=false;
+		}  	
+	}
+	function team_betting(url)
+	{
+		window.open(url,'','resizable=no width=520 height=210');
+		//alert(url);
+	}
+	function team_betting2(url)
+	{
+		window.open(url,'','resizable=no width=520 height=240');
+		//alert(url);
+	}
+	function go_delete(url)
+	{
+		if(confirm("정말 삭제하시겠습니까?  "))
+		{
+			document.location = url;
+		}
+		else{return;}
+	}
+		
+	function onCheckbox(frm)
+	{
+		if(frm.money_option.checked==true)
+		{
+			frm.money_option.value=1
+		}
+		else
+			frm.money_option.value=0
+		frm.submit();
+	}
+	
+	function onDeadLine(child_sn)
+	{
+		if(confirm("게임시간을 변경 하시겠습니까?"))
+		{
+			param="child_sn="+child_sn+"&act=deadline_game&state={state}&game_type={gameType}&categoryName={categoryName}&special_type={special_type}&perpage={perpage}&begin_date={begin_date}&end_date={end_date}&filter_team_type={filter_team_type}&filter_team={filter_team}&money_option={money_option}&page={page}";
+			document.location="/game/gamelist?"+param;
+		}
+		else
+		{
+			return;
+		}
+	}
+</script>
+</head>
+
+<div class="wrap">
+
+	<div id="route">
+		<h5>관리자 시스템 - 항목 보기</h5>
+	</div>
+	<h3>항목 보기</h3>	
+	
+	<div id="search">
+		<form name=frmSrh method=post action="/game/gamelist">
+			<input type="hidden" name="search" value="search">				
+			<input type="hidden" name="type" value="{type}">
+			<input type="hidden" name="category_name" value="">
+			
+			<div class="betList_option">
+				
+				<span>출력</span>
+				<input name="perpage" type="text" id="perpage"  class="sortInput" onkeyup="if(event.keyCode !=37 && event.keyCode != 39) value=value.replace(/\D/g,'');" maxlength="3" size="5" value="{perpage}" onmouseover="this.focus()">
+				
+				<span class="icon">설정</span>
+				<input type="radio" name="state" value=0 {? state==0}checked{/} class="radio">전체
+				<input type="radio" name="state" value=1 {? state==1}checked{/} class="radio">종료
+				<input type="radio" name="state" value=20 {? state==20}checked{/} onClick="submit()" class="radio">발매(배팅가능)
+				<input type="radio" name="state" value=21 {? state==21}checked{/} onClick="submit()" class="radio">발매(배팅마감)
+				<input type="radio" name="state" value=3 {? state==3}checked{/} class="radio">대기
+				&nbsp;&nbsp;
+				
+				<span class="icon">정렬</span>
+				<select name="special_type" onchange="submit()">
+					<option value="">대분류</option>
+					<option value="1"  {? special_type==1}  selected {/}>일반</option>
+					<option value="2"  {? special_type==2}  selected {/}>스페셜</option>
+					<option value="4"  {? special_type==4}  selected {/}>멀티</option>
+					<option value="5"  {? special_type==5}  selected {/}>사다리</option>
+					<option value="6"  {? special_type==6}  selected {/}>파워볼</option>
+				</select>
+				
+				<select name="game_type" onchange="submit()">
+					<option value="">종류</option>
+					<option value="1"  {? gameType==1}  selected {/}>승무패</option>
+					<option value="2"  {? gameType==2}  selected {/}>핸디캡</option>
+					<option value="4"  {? gameType==4}  selected {/}>언더오버</option>
+				</select>
+				
+				<select name="categoryName" onchange="submit()">
+					<option value="">종목</option>
+					{@ categoryList}
+						<option value="{.name}"  {? categoryName==.name}  selected {/}>{.name}</option>
+					{/}
+				</select>
+				
+				<!--<input type="checkbox" name="money_option" value="" {? money_option==1}checked{/} onClick="onCheckbox(this.form)"><font color='red'> 배팅금액 0↑</font>-->
+
+			</div>
+			<div class="wrap_search">
+				
+				<!-- 기간 필터 -->
+				<span class="icon">날짜</span><input name="begin_date" type="text" id="begin_date" class="date" value="{begin_date}" maxlength="20" onclick="new Calendar().show(this);"/>&nbsp;~
+				<input name="end_date" type="text" id="end_date" class="date" value="{end_date}" maxlength="20" onclick="new Calendar().show(this);" />
+				
+				<!-- 팀검색, 리그검색 -->
+				<select name="filter_team_type">
+					<option value="home_team" {? filter_team_type=="home_team"} selected{/}>홈팀</option>
+					<option value="away_team" {? filter_team_type=="away_team"} selected{/}>원정팀</option>
+					<option value="league" 		{? filter_team_type=="league"} selected{/}>리그명</option>
+				</select>
+				<input type=text" size=10 name="filter_team" value="{filter_team}" class="name">
+				
+				<!-- 배팅총액 검색-->
+				배팅총액 <input type=text" size=10 name="filter_betting_total" value="{filter_betting_total}" onkeypress="javascript:pressNumberCheck();" class="name" style="IME-MODE: disabled;">만원 이상
+				
+				<!-- 검색버튼 -->
+				<input name="Submit4" type="image" src="/img/btn_search.gif" class="imgType" title="검색" />
+			</div>
+		</form>
+	</div>
+	
+	<form id="form1" name="form1" method="post" action="?">
+  	<input type="hidden" name="act" value="delete">  	
+		<table cellspacing="1" class="tableStyle_gameList">
+			<legend class="blind">게임별 상세항목</legend>
+			<thead>
+				<tr>
+					<th scope="col">번호</th>
+					<th scope="col">진행상태</th>
+					<th scope="col">대분류</th>
+					<th scope="col">종류</th>
+					<th scope="col">종목</th>
+					<th scope="col">경기일시</th>
+					<th scope="col">리그</th>
+					<th scope="col" colspan="2">승(홈팀)</th>
+					<th scope="col">무</th>
+					<th scope="col" colspan="2">패(원정팀)</th>
+					<th scope="col">스코어</th>
+					<th scope="col">이긴 팀</th>
+					<th scope="col">배당관리</th>
+					<th scope="col">배팅수정</th>
+					<th scope="col">마감</th>
+					<th scope="col">홈배팅(낙첨제외)</th>
+					<th scope="col">무배팅(낙첨제외)</th>
+					<th scope="col">원정배팅(낙첨제외)</th>
+				</tr>
+			</thead>
+			<tbody>
+	    	{@ list}
+				{? is_null(list.kubun)}
+					<tr>	
+				{: list.kubun == 0}
+ 					<tr class="gameGoing">
+ 				{: list.kubun == 1}		
+ 					<tr class="gameEnd">	
+ 				{/ }
+						<td>
+							{? type==3}
+								<input type='checkbox' name='intChildIdx' value='{list.child_sn}'><font color=blue>{list.child_sn}</font>
+							{:}
+								<font color='blue'>{list.child_sn}</font>
+							{/}
+							
+							{? is_null(list.kubun)}
+								<input type='button' class='btnStyle_s' value='발매' onclick=open_window('/game/modifyStausProcess?mode=edit&idx={list.child_sn}&play=0','300','200')>
+							{/}
+						</td>
+						<td>
+							{? is_null(list.kubun)} <img src="/img/icon_gameStand.gif">
+							{: list.kubun == 0 }<img src="/img/icon_gameGoing.gif">
+							{: list.kubun == 1 }<img src="/img/icon_gameEnd.gif">
+							{/}
+						<!-- 12.10.29 "대기중" 게임일 때 <img src="/img/icon_gameStand.gif"> / "진행중" 게임일 때 <img src="/img/icon_gameGoing.gif"> / "완료" 게임일 때 <img src="/img/icon_gameEnd.gif"> -->
+					</td>
+					<td>
+						{? list.special==0}일반
+						{: list.special==1}스페셜
+						{: list.special==2}멀티
+						{: list.special==5}사다리
+						{: list.special==6}파워볼
+						{/}
+					</td>
+					<td>
+							{? list.type==1}
+								<span class="victory">승무패</span>
+							{: list.type==2}
+								<span class="handicap">핸디캡</span>
+							{: list.type==4}
+								<span class="underover">언더오버</span>
+							{/}
+						</td>
+						<td>{.sport_name}</td>
+						<td>{=sprintf("%s %s:%s", substr(list.gameDate,5), list.gameHour, list.gameTime)}</td>
+						<!--<td>{list.regDate}</td>-->
+						<td>{list.league_name}</td>
+						<td class="homeName">
+							<a href=javascript:team_betting2("/game/popup_gamedetail?child_sn={list.child_sn}"); style='cursor:hand' onmousemove="showpup('{list.home_team}&nbsp;&nbsp;VS&nbsp;&nbsp;{list.away_team}')" onmouseout='hidepup()'>
+								{=mb_strimwidth(list.home_team, 0, 20, "..", "utf-8")}
+							</a>
+						</td>
+						<td>{list.home_rate}</td>
+						<td>{?list.draw_rate=='1.00' && list.type==1|| list.draw_rate=='0' && list.type==2}VS{:}{list.draw_rate}{/}</td>
+						<td>{list.away_rate}</td>
+						<td class="awayName">
+							<a href=javascript:team_betting2("/game/popup_gamedetail?child_sn={list.child_sn}"); style='cursor:hand' onmousemove="showpup('{list.home_team}&nbsp;&nbsp;VS&nbsp;&nbsp;{list.away_team}')" onmouseout='hidepup()'>
+								{=mb_strimwidth(list.away_team, 0, 20, "..", "utf-8")}
+							</a>
+						</td>
+						<td>{list.home_score}:{list.away_score}</td>
+						<td>
+							{? list.win==1} 홈승
+							{: list.win==2} 원정승
+							{: list.win==3} 무승부
+							{: list.win==4} 취소/적특
+							{:} &nbsp;
+							{/}
+						</td>
+						<!--<td>
+							<input type='hidden' id='{list.child_sn}_home_rate' value='{list.home_rate}'>
+							<input type='checkbox' {? list.win==1} checked {/}>{list.home_rate}
+							<input type='hidden' id='{list.child_sn}_draw_rate' value='{list.draw_rate}'>
+							<input type='checkbox' {? list.win==3} checked {/}>{list.draw_rate}
+							<input type='hidden' id='{list.child_sn}_away_rate' value='{list.away_rate}'>
+							<input type='checkbox' {? list.win==2} checked {/}>{list.away_rate}
+						</td>-->
+						<td>
+							<input type='button' class='btnStyle4' value='배당수정' onclick=open_window('/game/modifyrate?idx={.child_sn}&gametype={list.type}&mode=edit','650','300')>
+						</td>
+						<td>
+							{? list.special==2 && list.result!=1}
+								<input type="button" class="btnStyle3" value="마감" onclick="onDeadLine({list.child_sn})";>&nbsp;
+							{/}
+						</td>
+						<td>{list.betting_count}</td>
+						<td><a href="#" onclick="open_window('/game/popup_bet_list?child_sn={.child_sn}&select_no=1','1024','600')">{=number_format(.home_total_betting,0)}({=number_format(.active_home_total_betting)})</a></td>
+						<td><a href="#" onclick="open_window('/game/popup_bet_list?child_sn={.child_sn}&select_no=3','1024','600')">{=number_format(.draw_total_betting)}({=number_format(.active_draw_total_betting)})</a></td>
+						<td><a href="#" onclick="open_window('/game/popup_bet_list?child_sn={.child_sn}&select_no=2','1024','600')">{=number_format(.away_total_betting)}({=number_format(.active_away_total_betting)})</a></td>
+					</tr>
+	    	{/}
+	    	{? type==3}
+		    	<tr height="26">
+						<td  colspan="9">
+							<input type="button" value="전체선택" onclick="checkAll()" class="input">
+							<input type="button" value="선택해제" onclick="clearAll()" class="input">
+							<input type="button" value="선택발매" onclick="addall()" class="input">
+							<input type="button" value="선택삭제" onclick="delall()" class="input">
+						</td>
+					</tr>
+	    	{/}
+	  </table>
+	  
+	  <div id="pages">
+			{pagelist}
+		</div>
+	
+	</form>
+</div>

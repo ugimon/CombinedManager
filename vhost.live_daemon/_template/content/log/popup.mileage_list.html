@@ -1,0 +1,83 @@
+<script>document.title = '입출금 관리-회원 마일리지내역';</script>
+
+<div class="wrap" id="Withdrawal">
+
+	<div id="route">
+		<h5>관리자 시스템 > 입출금 관리 > <b>회원마일리지내역</b></h5>
+	</div>
+
+	<h3>회원마일리지 내역</h3>
+
+	<ul id="tab">
+		<li><a href="/log/popup_mileageloglist" id="Richer_over">회원 마일리지 내역</a></li>
+	</ul>
+
+	<div id="search">
+		<div class="wrap">
+			<form action="?" method="GET" name="form2" id="form2">
+				<input type="hidden" name="uid" value={uid}>
+				<span class="icon">출력</span>
+				<input name="perpage" type="text" id="perpage"  class="sortInput" onkeyup="if(event.keyCode!=37 && event.keyCode!=39) value=value.replace(/\D/g,'');" maxlength="3" size="5" value="{perpage}" onmouseover="this.focus()">
+				
+				<!-- 기간 필터 -->
+				<span class="icon">날짜</span><input name="begin_date" type="text" id="begin_date" class="date" value="{begin_date}" maxlength="20" onclick="new Calendar().show(this);"/>&nbsp;~
+				<input name="end_date" type="text" id="end_date" class="date" value="{end_date}" maxlength="20" onclick="new Calendar().show(this);" />
+				
+				<!-- 상태 검색 -->
+				<select name="filter_state">
+					<option value="" 	{? filter_state==""} selected {/}>::마일리지 발생사유</option>
+					<option value="1" {? filter_state==1} selected {/}>충전 추가 마일리지</option>
+					<option value="3" {? filter_state==3} selected {/}>다폴더 당첨 마일리지</option>
+					<option value="4" {? filter_state==4} selected {/}>낙첨 마일리지</option>
+					<option value="12" {? filter_state==12} selected {/}>추천인 낙첨 마일리지</option>
+					<option value="6" {? filter_state==6} selected {/}>포인트 전환 마일리지</option>
+					<option value="10" {? filter_state==10} selected {/}>활동포인트 마일리지</option>
+					<option value="8" {? filter_state==8} selected {/}>정산취소</option>
+				</select>
+				
+				<!-- 검색버튼 -->
+				<input name="Submit4" type="image" src="/img/btn_search.gif" class="imgType" />
+			</form>
+		</div>
+	</div>
+
+	<form id="form1" name="form1" method="post" action="?act=del">
+		<table cellspacing="1" class="tableStyle_normal">
+			<legend class="blind">마일리지 내역</legend>
+			<thead>
+			<tr>
+				  <th scope="col">일시</th>
+				  <th scope="col" class="id">아이디</th>
+				  <th scope="col">닉네임</th>
+				  <th scope="col">입금자명</th>
+				  <th scope="col">총판</th>
+				  <th scope="col">당시금액</th>
+				  <th scope="col">변동금액</th>
+				  <th scope="col">최종금액</th>
+				  <th scope="col">사유</th>
+				  <th scope="col">비고</th>
+			</tr>
+			</thead>
+			<tbody>
+			{@ list}
+				<tr>
+					<td>{list.log_regdate}</td>
+					<td><a href="javascript:open_window('/member/popup_detail?idx={list.member_sn}',1024,600)">{.uid}</td>
+					<td>{list.nick}</td>
+					<td>{list.bank_member}</td>
+					<td>{list.rec_id}</td>
+					<td>{=number_format(list.before_money,0)}</td>
+					<td>{=number_format(list.amount,0)}</td>
+					<td>{=number_format(list.after_money,0)}</td>
+					<td>{list.status_message}</td>
+					<td></td>
+				</tr>
+			{/}
+			</tbody>
+		</table>
+	</form>
+
+	<div id="pages">
+		{pagelist}
+	</div>
+</div>

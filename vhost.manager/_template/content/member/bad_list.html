@@ -1,0 +1,96 @@
+<script type="text/javascript">
+	
+function go(idx){
+	var result = confirm('정말 정상회원으로 전환하시겠습니까?');
+	if(result){
+		location.href="?mode=change&idx="+idx;
+	}	
+}
+</script>
+
+<div class="wrap" id="members">
+
+	<div id="route">
+		<h5>관리자 시스템 > 회원 관리 > <b>불량회원</b></h5>
+	</div>
+
+	<h3>불량회원</h3>
+
+	<div id="search">
+		<div>
+			<form action="?" method="get" name="form2" id="form2">
+			<span>아이디</span>
+            <input name="username" type="text" id="key" class="name" value="{nname}" maxlength="20" onmouseover="this.focus()"/>
+            <input name="Submit4" type="image" src="/img/btn_search.gif" class="imgType" title="검색" />
+          </form>
+		</div>
+	</div>
+
+	<form id="form1" name="form1" method="post" action="?mode=allchange">	
+	<table cellspacing="1" class="tableStyle_members">
+	<legend class="blind">불량회원</legend>
+	<thead>
+		<tr>
+			<th scope="col" class="check"><input type="checkbox" name="chkAll" title="전체선택" onClick="selectAll()"/></th>
+			<th scope="col">아이디</th>
+			<th scope="col">닉네임</th>
+			<th scope="col">이름</th>
+			<th scope="col">보유금액</th>
+			<th scope="col">등급</th>
+			<th scope="col">그룹</th>
+			<th scope="col">입금</th>
+			<th scope="col">출금</th>
+			<th scope="col">배팅</th>
+			<th scope="col">쪽지</th>
+			<th scope="col">상태</th>
+			<th scope="col">가입일</th>
+			<th scope="col">가입IP</th>
+			<th scope="col">파트너</th>
+			<th scope="col">처리</th>
+		</tr>
+	</thead>
+	<tbody>
+	{@ list}
+		<tr>
+			<td><input name="y_id[]" type="checkbox" id="y_id" value="{.sn}"  onclick="javascript:chkRow(this);"/></td>
+			<td><a href="javascript:open_window('/member/popup_detail?idx={.sn}',1024,600)">{.uid}</a></td>        
+			<td>{list.nick}</td>
+			<td>{list.name}</td>
+			<td>
+				{? strpos(quanxian,"1001")}
+					<a href="javascript:open_window('/member/popup_moneychange?idx={.uid}&act=money',400,250)">{=number_format(list.g_money,0)}</a>
+				{:}
+					{=number_format(list.g_money,0)}
+				{/}
+			</td>
+			<td>
+				
+			</td>
+			<td>&nbsp;</td>
+			<td>{list.RechargeNum}</td>
+			<td>{list.changenum}</td>
+			<td>{list.betnum}</td>
+			<td>{list.memoread}/{list.memototle}</td>
+			<td>{list.status}</td>
+			<td>{list.regdate}</td>
+			<td>{list.reg_ip}</td>
+			<td>{list.recommend_sn}</td>
+			<td><a href="javascript:go({.sn});void(0);"><img src="/img/btn_s_cancel.gif"></a></td>
+		</tr>
+	{/}
+	</tbody>
+	</table>
+	<div id="pages">
+		{pagelist}
+	</div>
+
+	<div id="wrap_btn">
+		<p class="left">
+			<input type="button" name="open" value="회원등록" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'"  onmouseout="this.className='Qishi_submit_a'" onclick="window.location.href='/member/add'"/>
+			<input type="button" name="open" value="상태전환" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'"  onmouseout="this.className='Qishi_submit_a'" onclick="isChm()"/>
+		</p>
+	</div>
+
+	</form>
+
+</div>

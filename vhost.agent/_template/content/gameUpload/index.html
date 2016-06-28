@@ -1,0 +1,94 @@
+<script>
+	function openGameBetForm(intParentIdx)
+	{
+		window.open("totoGameResultForm2.asp?intParentIdx="+intParentIdx,"bet","width=350,height=150,left=550,top=100,scrollbars=yes");
+	}
+
+	function go_delete(url)
+	{
+			if(confirm("정말 삭제하시겠습니까?  "))
+			{
+					document.location = url;
+			}else{
+				return;
+			}
+	}
+
+	function coin_add(url)
+	{
+		window.open(url,'','scrollbars=yes,width=500,height=360,left=5,top=0');
+	}
+
+	function coin_add1(url)
+	{
+		window.open(url,'','scrollbars=yes,resizable=yes,width=1000,height=700,left=5,top=0');
+	}
+
+</script>
+</head>
+
+	<div id="route">
+		<h5>관리자 시스템 - 게임관리</h5>
+	</div>
+	<h3>관리자 시스템 - 게임관리</h3>
+	<input type="button" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'" onmouseout="this.className='Qishi_submit_a'" onclick="open_window('/gameUpload/popup_addparent?mode=add',620,350)" value="새회차등록">
+
+	<form id="form1" name="form1" method="post" action="?act=delete_user">
+		<table cellspacing="1" class="tableStyle_normal" summary="게임관리">
+			<legend class="blind">게임관리</legend>
+			<thead>
+				<tr>
+				  <th nowrap>회차번호</th>
+				  <th>마감날짜</th>
+				  <th>최소 배팅값</th>
+				  <th>최대 배당금액</th>
+				  <th>베팅현황보기</th>
+				  <th>게임종료</th>
+				  <th>항목보기</th>
+				  <th>경기수</th>
+				  <th>수집</th>
+				  <th>삭제<font color="red">(*주의!)</font></th>      
+				</tr>
+			</thead>
+			<tbody>
+				{? total<=0}
+					<tr bgcolor='#FFFFFF' height="50"><td colspan="9" align="center">데이타가 없습니다.</td></tr>
+				{:}
+					{@ list}
+						<tr>
+							<td width="5%" align=center>{list.intParentIdx}</td>
+							<td><a href="javascript:open_window('/gameUpload/popup_addparent?intParentIdx={list.intParentIdx}',420,250)">{list.strGameEndTime}</a></td>
+							<td>{=number_format(list.intMinBetPrice,0)}<br><font color="blue">(배){=number_format(list.total_betting,0)}</font></td>
+							<td>{=number_format(list.intMaxBetPrice,0)}<br><font color="green">(당){=number_format(list.total_result,0)}</font></td>
+							<td><a href="/gameUpload/betlist?intParentIdx={list.intParentIdx}">[베팅현황보기]</a><br>
+								{? list.now_money > 10000}
+									<font color="blue">{=number_format(list.now_money,0)}</font>
+								{:}
+									<font color="red">{=number_format(list.now_money,0)}</font>
+								{/}
+							<td>
+								<a href="javascript:open_window('/gameUpload/popup_toggleparent?intParentIdx={list.intParentIdx}',350,150);" class="btnStyle4">
+									{? list.blnGameEnd=="Y"}
+										종료
+									{:}
+										<font color='red'>진행중</font>
+									{/}
+								</a>
+							</td>
+							<td><a href="/gameUpload/gamelist?intParentIdx={list.intParentIdx}" class="btnStyle4">항목보기</a></td>
+							<td>{list.child_cnt}</td>
+							<td>
+								<input type="button" value="7m-수집" class="btnStyle3" onclick="javascript:coin_add1('/gameUpload/collect7m?idx={list.intParentIdx}&mode=collect');">
+								<input type="button" value="Excel-수집" class="btnStyle3" onclick="javascript:coin_add1('/gameUpload/popup_excelupload?idx={list.intParentIdx}');">
+							</td>
+							<td><input type="button" value="삭 제" class="btnStyle3" onClick="go_delete('/gameUpload/delparentProcess?idx={list.intParentIdx}')"></td>
+						</tr>
+					{/}
+				{/}			
+			</tbody>
+		</table>
+	</form>
+
+	<div id="pages">
+		{pagelist}
+	</div>

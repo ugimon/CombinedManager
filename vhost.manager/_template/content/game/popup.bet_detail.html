@@ -1,0 +1,68 @@
+<body>
+
+<div id="wrap_pop">
+	<div id="pop_title">
+		<h1>상세 배팅 내역</h1>
+		<p><img src="/img/btn_s_close.gif" onclick="window.close()" title="창닫기"></p>
+	</div>
+
+	<table cellspacing="1" class="tableStyle_gameList" summary="상세 배팅 내역">
+	<legend class="blind">상세 배팅 내역</legend>
+	<thead>
+		<tr>
+			<th>게임번호</th>
+			<th>게임타입</th>
+			<th>경기시간</th>
+			<th>리그</th>
+			<th>홈팀</th>
+			<th>무</th>
+			<th>원정</th>
+			<th>점수</th>
+			<th>배팅</th>
+			<th>결과</th>
+			<th>상태</th>
+		</tr>
+	</thead>
+	<tbody>
+	 {@ list}
+		<tr>
+			<td>{list.child_sn}</td>
+			<td>
+				{? list.game_type==1}승무패
+				{: list.game_type==2}핸디캡
+				{: list.game_type==3}홀짝
+				{: list.game_type==3}언더오버
+				{/} 
+			</td>	
+			<td>{list.gameHour}:{list.gameTime}</td>	
+			<td>{list.league_name}</td>	
+			<td>{list.home_team}{list.home_rate}</td>	
+			<td>{list.draw_rate}</td>				
+			<td>{list.away_team}{list.away_rate}</td>	
+			<td>
+				{? list.result != 0}{list.home_score}:{list.away_score}{/}
+			</td>	
+			<td>
+				{? list.select_no == 1}홈 
+				{: list.select_no == 2}무
+				{: list.select_no == 3}원 
+				{/}
+			</td>	
+			<td>
+				{? list.result==1}
+					<font color=red>적  중</font>
+				{: list.result==2}
+					실  패
+				{:}
+					경기중
+				{/}
+			</td>	
+			<td></td>	
+		</tr>
+	{/}
+	</tbody>
+	</table>
+
+</div>
+</body>
+</html>

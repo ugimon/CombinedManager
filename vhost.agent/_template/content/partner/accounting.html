@@ -1,0 +1,69 @@
+
+<script>
+	
+function go_del(url)
+{
+	if(confirm("정말 삭제하시겠습니까?"))
+	{
+		document.location = url;
+	}
+	else
+	{
+		return;
+	}
+}
+
+</script>
+
+<div class="wrap" id="partner_accounting">
+
+	<div id="route">
+		<h5>관리자 시스템 > 파트너 관리 > <b>정산 신청</b></h5>
+	</div>
+
+	<h3>정산 신청</h3>
+
+	<ul id="tab">
+		<li><a href="/partner/accounting" id="partner_accounting">정산 신청</a></li>
+		<li><a href="/partner/accounting_fin" id="partner_accounting_fin">정산 완료</a></li>
+	</ul>
+
+	<form id="form1" name="form1" method="post" action="?act=delete_user">
+	<table cellspacing="1" class="tableStyle_normal" summary="정산 신청 목록">
+	<legend class="blind">정산 신청</legend>
+	<thead>
+		<tr>
+			<th scope="col">파트너</th>
+			<th scope="col">정산내역</th>
+			<th scope="col">정산금액</th>
+			<th scope="col">은행명</th>
+			<th scope="col">계좌번호</th>
+			<th scope="col">예금주</th>
+			<th scope="col">정산시작</th>
+			<th scope="col">정산완료</th>
+			<th scope="col">처리</th>
+		</tr>
+	</thead>
+	<tbody>	
+		{@ list }
+			<tr>
+				<td>{list.rec_id}(<font color="red">{list.rate}</font>%)</td>
+				<td >입금({=number_format(list.charge_money,0)})-출금({=number_format(list.exchange_money,0)})={=number_format(list.charge_money-list.exchange_money,0)}</td>
+				<td>{=number_format(list.opt_money,0)}</span></td>
+				<td>{list.bank_name}</span></td>
+				<td>{list.bank_num}</td>
+				<td>{list.bank_username}</td>
+				<td>{list.start_date}</td>
+				<td>{list.end_date}</td>
+				<td><a href="javascript:void(0)" onclick="go_del('?act=cancel&idx={list.idx}')"><img src="/img/btn_s_del.gif" title="삭제"></a>&nbsp;<a href="?act=renew&idx={list.idx}"><img src="/img/btn_s_account.gif" title="정산"></a></td>
+			</tr>
+		{/}	
+	</tbody>
+	</table>
+	</form>
+
+	<div id="pages">
+		{pagelist}
+	</div>
+
+</div>

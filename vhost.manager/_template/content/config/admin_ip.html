@@ -1,0 +1,62 @@
+<script>
+	function on_insert()
+	{
+		document.frm.act.value="insert";
+		document.frm.submit();
+	}
+	
+	function on_modify(modify_sn)
+	{
+		var modify_ip = $("#"+modify_sn+"_ip").val();
+		
+		document.frm.act.value="modify";
+		document.frm.modify_sn.value=modify_sn;
+		document.frm.modify_ip.value=modify_ip
+		document.frm.submit();
+	}
+	
+	function on_delete(delete_sn)
+	{
+		document.frm.act.value="delete";
+		document.frm.delete_sn.value=delete_sn;
+		document.frm.submit();
+	}
+</script>
+
+<div class="wrap">
+
+	<div id="route">
+		<h5>관리자 시스템 > 시스템 관리 > <b>포인트 설정</b></h5>
+	</div>
+
+	<h3>아이피 관리</h3>
+
+	<form  method="post"  name="frm" action="/config/admin_ip">
+		<input type="hidden" name="act">
+		<input type="hidden" name="modify_sn">
+		<input type="hidden" name="delete_sn">
+		<input type="hidden" name="modify_ip">
+		<table cellspacing="1" class="tableStyle_membersWrite" summary="아이피 관리">
+			<tr>
+				<th>아이피 추가</th>
+				<td>
+					<input type="text" class="w120" name="insert_ip" size="10" />
+					<input type="button" value="추가" onClick="on_insert()">
+				</td>
+			</tr>
+		</table>
+		
+		<table cellspacing="1" class="tableStyle_membersWrite" summary="아이피 관리">
+		{@ list}
+			<tr>
+				<th>아이피</th>
+				<td>
+					<input type="text" class="w120" name="{list.sn}_ip" id="{list.sn}_ip" size="10" value="{list.ip}" onKeyUp=" value=value.replace(/[^\d\.]/g,'')" />
+					<input type="button" value="수정" onClick="on_modify({list.sn});">
+					<input type="button" value="삭제" onClick="on_delete({list.sn});">
+				</td>
+			</tr>
+		{/}
+		</table>
+	</form>
+</div>

@@ -1,0 +1,295 @@
+<style type="text/css">
+.betTotalAccount
+{
+	font-weight: bold;
+}
+
+.betAccountTitle
+{
+	display: inline-block;
+	width: 50px;
+}
+</style>
+
+<body>
+
+<div id="wrap_pop">
+	<div id="pop_title">
+		<h1>회원 배팅규정 확인</h1>
+		<p><img src="/img/btn_s_close.gif" onclick="window.close()" title="창닫기"></p>
+	</div>
+
+	<form name="frm" method="POST" action="?mode=modify">
+		<input type="hidden" name="memid" value="{list.uid}">
+		<input type="hidden" name="urlidx" value="{memberSn}">
+		
+		<table cellspacing="1" class="tableStyle_membersWrite" summary="회원 정보">
+			<tr>
+			  <th>아이디</th>
+			  <td>{list.uid}</td>
+			</tr>
+
+			<tr>
+			  <th>닉네임</th>
+			  <td>{list.nick}</td>
+			</tr>
+
+			<tr>
+			  <th>예금주</th>
+			  <td>{list.bank_member}</td>
+			</tr>
+
+			<tr>
+			  <th>회원등급</th>
+			  <td>
+			  	<select name="mem_lev">
+			  		{@ levelList}
+			  			<option value="{levelList.lev}" {? list.mem_lev==levelList.lev} selected {/}>{levelList.lev_name}</option>	
+			  		{/}
+				</select>
+			  </td>
+			</tr>
+
+			
+			<tr>
+			  <th>최근충전</th>
+			  <td>
+			  	<table cellspacing="1" class="tableStyle_normal" summary="입금 내역">
+					<thead>
+						<tr>
+						  <td style="color:black; font-weight:bold; border-top:1px solid #DDD; border-right:1px solid #eaeaea; border-bottom:1px solid #eaeaea;">신청시간</td>
+						  <td style="color:black; font-weight:bold; border-top:1px solid #DDD; border-right:1px solid #eaeaea; border-bottom:1px solid #eaeaea;">처리시간</td>
+						  <td style="color:black; font-weight:bold; border-top:1px solid #DDD; border-right:1px solid #eaeaea; border-bottom:1px solid #eaeaea;">당시금액</td>
+						  <td style="color:black; font-weight:bold; border-top:1px solid #DDD; border-right:1px solid #eaeaea; border-bottom:1px solid #eaeaea;">보유금액</td>
+						  <td style="color:black; font-weight:bold; border-top:1px solid #DDD; border-right:1px solid #eaeaea; border-bottom:1px solid #eaeaea;">신청금액</td>
+						  <td style="color:black; font-weight:bold; border-top:1px solid #DDD; border-right:1px solid #eaeaea; border-bottom:1px solid #eaeaea;">실입금액</td>
+						  <td style="color:black; font-weight:bold; border-top:1px solid #DDD; border-right:1px solid #eaeaea; border-bottom:1px solid #eaeaea;">입금자명</td>
+						  <td style="color:black; font-weight:bold; border-top:1px solid #DDD; border-right:1px solid #eaeaea; border-bottom:1px solid #eaeaea;">상태</td>
+						</tr>
+					</thead>
+
+					<tbody>
+					{@ chargeList}
+						<tr class="link_lan" style="padding-left:1px;"  onMouseOver="this.style.backgroundColor='#e0eafe';" onMouseOut="this.style.backgroundColor=''" >
+							<td>{chargeList.regdate}</td>        
+							<td>{chargeList.operdate}</td>
+							<td>{=number_format(chargeList.before_money,0)}</td>
+							<td>{=number_format(chargeList.g_money,0)}</td>
+							<td>{=number_format(chargeList.amount,0)}</td>
+							<td>{=number_format(chargeList.agree_amount,0)}</td>
+							<td>{chargeList.bank_owner}</td>
+							<td>
+								{? chargeList.state==0}
+									<font color='red'>신청</font>
+								{: chargeList.state==1}
+									<font color='blue'>완료</font>
+								{:}
+									<font color='yellow'>삭제</font>
+								{/}
+							</td>
+					  	</tr>
+					{/}
+					</tbody>
+				</table>
+			  </td>
+			</tr>
+
+ 
+			<tr>
+			  <th>최근환전</th>
+			  <td>
+			  	<table cellspacing="1" class="tableStyle_normal" summary="출금 내역">
+					<thead>
+						<tr>
+						  <td style="color:black; font-weight:bold; border-top:1px solid #DDD; border-right:1px solid #eaeaea; border-bottom:1px solid #eaeaea;">신청시간</td>
+						  <td style="color:black; font-weight:bold; border-top:1px solid #DDD; border-right:1px solid #eaeaea; border-bottom:1px solid #eaeaea;">처리시간</td>
+						  <td style="color:black; font-weight:bold; border-top:1px solid #DDD; border-right:1px solid #eaeaea; border-bottom:1px solid #eaeaea;">당시금액</td>
+						  <td style="color:black; font-weight:bold; border-top:1px solid #DDD; border-right:1px solid #eaeaea; border-bottom:1px solid #eaeaea;">보유금액</td>
+						  <td style="color:black; font-weight:bold; border-top:1px solid #DDD; border-right:1px solid #eaeaea; border-bottom:1px solid #eaeaea;">출금금액</td>
+						  <td style="color:black; font-weight:bold; border-top:1px solid #DDD; border-right:1px solid #eaeaea; border-bottom:1px solid #eaeaea;">실출금액</td>
+						  <td style="color:black; font-weight:bold; border-top:1px solid #DDD; border-right:1px solid #eaeaea; border-bottom:1px solid #eaeaea;">예금주</td>
+						  <td style="color:black; font-weight:bold; border-top:1px solid #DDD; border-right:1px solid #eaeaea; border-bottom:1px solid #eaeaea;">상태</td>
+						</tr>
+					</thead>
+
+					<tbody>
+					{@ exchangeList}
+						<tr class="link_lan" style="padding-left:1px;"  onMouseOver="this.style.backgroundColor='#e0eafe';" onMouseOut="this.style.backgroundColor=''" >
+							<td>{exchangeList.regdate}</td>        
+							<td>{exchangeList.operdate}</td>
+							<td>{=number_format(exchangeList.before_money,0)}</td>
+							<td>{=number_format(exchangeList.g_money,0)}</td>
+							<td>{=number_format(exchangeList.amount,0)}</td>
+							<td>{=number_format(exchangeList.agree_amount,0)}</td>
+							<td>{exchangeList.bank_owner}</td>
+							<td>
+								{? exchangeList.state==0}
+									<font color='red'>신청</font>
+								{: exchangeList.state==1}
+									<font color='blue'>완료</font>
+								{:}
+									<font color='yellow'>삭제</font>
+								{/}
+							</td>
+					  	</tr>
+					{/}
+					</tbody>
+				</table>
+			  </td>
+			</tr>
+			
+			<tr>
+				<th>배팅규정 CASE</th>
+				<td>{ncase}</td>
+			</tr>
+
+			<tr>
+				{@ chargeList}
+				<th>롤링충족금액</th>
+				<td>{=number_format(chargeList.amount * 3, 0)} (300% 기준)</td>
+				{/}
+			</tr>
+
+			<tr>
+
+				<th>현재롤링금액</th>
+				<td>
+					<div class="betTotalAccount"><span class="betAccountTitle">총&nbsp;&nbsp;&nbsp;합</span> {=number_format(totalBet, 0)}원 ({totalBetCount}개)</div>
+					<div class="betAccount"><span class="betAccountTitle">라이브</span> {=number_format(liveBet, 0)}원 ({liveBetCount}개)</div>
+					<div class="betAccount"><span class="betAccountTitle">사다리</span> {=number_format(sadariBet, 0)}원 ({sadariBetCount}개)</div>
+					<div class="betAccount"><span class="betAccountTitle">파워볼</span> {=number_format(powerBet, 0)}원 ({powerBetCount}개)</div>
+				</td>
+				
+			</tr>
+
+			<tr>
+				<th>배팅내역</th>
+				<!--
+				<td>
+					<input type="button" onclick="javascript:open_window('/member/popup_bet?mem_sn={memberSn}','1400',600)" value="배팅내역" class="btnStyle1">
+				</td>
+				-->
+
+				<td>
+					<table cellspacing="1" class="tableStyle_normal" summary="배팅 내역">			
+						<legend class="blind">배팅 내역</legend>
+						<thead>
+							<tr>
+								<td width="8%">배팅번호</th>
+								<td width="5%">게임</th>
+								<td width="8%">당시금액</th>
+								<td width="8%">배팅금액</th>
+								<td width="5%">배당율</th>
+								<td width="8%">예상금액</th>
+								<td width="8%">배당금액</th>
+								<td width="10%">배팅시간</th>
+								<td width="10%">처리시간</th>
+							</tr>
+						</thead>
+					</table>
+					<br>
+					{@ betList}
+					<table cellspacing="1" class="tableStyle_normal">
+						<tbody>
+							<tr id="t_{betList.betting_no}" >
+								<td onclick="toggle('d_{betList.betting_no}')" width="8%">{.betting_no}</td>	
+								<td onclick="toggle('d_{betList.betting_no}')" width="5%">{.betting_cnt}</td>
+								<td onclick="toggle('d_{betList.betting_no}')" width="8%">{=number_format(.before_money,0)}</td>
+								<td onclick="toggle('d_{betList.betting_no}')" width="8%">{=number_format(.betting_money,0)}</td>
+								<td onclick="toggle('d_{betList.betting_no}')" width="5%">{=number_format(.result_rate, 2)}</td>
+								<td onclick="toggle('d_{betList.betting_no}')" width="8%">{=number_format((.betting_money*.result_rate),0)}</td>
+								<td onclick="toggle('d_{betList.betting_no}')" width="8%">{=number_format(.result_money,0)}</td>
+								<td onclick="toggle('d_{betList.betting_no}')" width="10%">{.regdate}</td>
+								<td onclick="toggle('d_{betList.betting_no}')" width="10%">{.operdate}</td>
+							</tr>
+						</tbody>
+					</table>
+					
+					<table cellspacing="1" class="tableStyle_memo" id="d_{list.betting_no}" style="display:none;width:90%;margin:0 auto;margin-top:5px;margin-bottom:5px">
+						<thead>
+							<tr>				  
+								<th>게임종류</th>
+								<th>게임타입</th>
+								<th>경기시간</th>
+								<th>리그</th>
+								<th colspan="2">홈팀</th>
+								<th>무</th>
+								<th colspan="2">원정팀</th>
+								<th>점수</th>
+								<th>배팅</th>
+								<th>결과</th>
+								<th>상태</th>
+							</tr>
+						</thead>
+						<tbody>
+							{@ item}
+							<tr>				
+								<td>
+									{? ..special==0}
+										[일반]
+									{: ..special==1}
+										[스페셜]
+									{: ..special==2}
+										[실시간]
+									{/}
+								</td>
+								<td>
+									{? ..game_type==1}
+										[승무패]
+									{: ..game_type==2}
+										[핸디캡]
+									{: ..game_type==3}
+										[홀짝]
+									{: ..game_type==4}
+										[언더오버]
+									{/}
+								</td>
+								<td>{..g_date}</td>
+								<td>{..league_name}</td>
+								<td {?..select_no==1}bgcolor='#CEF279'{/}>{..home_team}</td>
+								<td {?..select_no==1}bgcolor='#CEF279'{/}>{..home_rate}</td>
+								<td {?..select_no==3}bgcolor='#CEF279'{/} align=center>{..draw_rate}</td>
+								<td {?..select_no==2}bgcolor='#CEF279'{/}>{..away_rate}</td>
+								<td {?..select_no==2}bgcolor='#CEF279'{/}>{..away_team}</td>
+								<td>{..home_score}:{..away_score}</td>
+								<td>
+									{? ..select_no==1}
+										홈팀
+									{: ..select_no==2}
+										원정팀
+									{:}
+										무
+									{/}	
+								</td>
+								<td>
+									{? ..win == 1}[홈승]
+									{: ..win == 3}[무승부]
+									{: ..win == 2}[원정승]
+		                        	{: ..win == 4 && ( ..game_type == 2 || ..game_type == 4)}[적특]
+									{: ..win == 4}[취소]
+									{/}
+								</td>	
+								<td>
+									{? ..result==0}
+										<font color=#666666>진행중</font>
+									{: ..result==1}
+										<font color=red>적  중</font>
+									{: ..result==2}
+										<font color=blue>낙 첨</font>
+									{: ..result==4}
+										<font color=green>취 소</font>
+									{/}
+								</td>
+							</tr>	
+							{/}
+						</tbody>
+					</table>
+				{/}
+				</td>
+				
+			</tr>
+		</table>
+	</form>
+</div>
+
+</body>

@@ -1,0 +1,140 @@
+<?php
+	include_once("../include/common.php");
+	$act=$_REQUEST["act"];
+	$idx=$_REQUEST["idx"];
+	if($act=="edit"){
+		$SQL = "SELECT * FROM ".$db_qz."POPUP WHERE logo='".$logo."' and IDX = ".$idx;
+		$db->mysql=$SQL;
+		$db->getresule();
+		if($db->getrow()){
+			$P_SUBJECT = $db->row["P_SUBJECT"];
+			$P_POPUP_U = $db->row["P_POPUP_U"];
+			$P_STARTDAY = $db->row["P_STARTDAY"];
+			$P_ENDDAY = $db->row["P_ENDDAY"];
+			$P_WIN_WIDTH = $db->row["P_WIN_WIDTH"];
+			$P_WIN_HEIGHT = $db->row["P_WIN_HEIGHT"];
+			$P_WIN_LEFT = $db->row["P_WIN_LEFT"];
+			$P_WIN_TOP = $db->row["P_WIN_TOP"];
+			$P_STYLE = $db->row["P_STYLE"];
+			$P_MOVEURL = $db->row["P_MOVEURL"];
+			$P_CONTENT = $db->row["P_CONTENT"];
+			$P_FILE=$db->row["P_FILE"];
+		}
+	}
+?>
+
+<script language="javascript" src="/js/Calendar.js"></script>
+<script> 
+function chk_form()
+{
+if (FormData.P_SUBJECT.value=="")
+	{
+	alert("제목을 입력하십시오.")
+	FormData.P_SUBJECT.focus();
+	return (false);
+	}
+if (FormData.P_POPUP_U.value=="")
+	{
+	alert("사용여무을 선택하십시오.")
+	FormData.P_POPUP_U.focus();
+	return (false);
+	}
+if (FormData.P_STARTDAY.value=="")
+	{
+	alert("시작일을 입력하십시오.")
+	FormData.P_STARTDAY.focus();
+	return (false);
+	}
+if (FormData.P_ENDDAY.value=="")
+	{
+	alert("마감일을 입력하십시오.")
+	FormData.P_ENDDAY.focus();
+	return (false);
+	}
+if (FormData.P_WIN_LEFT.value=="" )
+	{
+	alert("left를 입력하십시오.")
+	FormData.P_WIN_LEFT.focus();
+	return (false);
+	}
+if (FormData.P_WIN_TOP.value=="" )
+	{
+	alert("top를 입력하십시오.")
+	FormData.P_WIN_TOP.focus();
+	return (false);
+	}
+if (FormData.P_WIN_WIDTH.value=="" )
+	{
+	alert("width를 입력하십시오.")
+	FormData.P_WIN_WIDTH.focus();
+	return (false);
+	}
+if (FormData.P_WIN_HEIGHT.value=="" )
+	{
+	alert("height를 입력하십시오.")
+	FormData.P_WIN_HEIGHT.focus();
+	return (false);
+	}
+return (true);
+}
+</script>
+
+<div class="wrap" id="popup_add">
+
+	<div id="route">
+		<h5>관리자 시스템 > 시스템 관리 > <b>팝업 설정</b></h5>
+	</div>
+
+	<h3>팝업 설정</h3>
+
+	<ul id="tab">
+		<li><a href="/popup/list" id="popup">팝업창 목록</a></li>
+		<li><a href="/popup/add" id="popup_add">팝업창 추가</a></li>
+	</ul>
+
+	<form action="popup_ok.php" method="post" enctype="multipart/form-data" name="FormData" onsubmit="return chk_form();">
+	<input type= "hidden" name = "idx" Value = "<?=$idx?>">
+	<input type= "hidden" name = "act" Value = "<?=$act?>">
+	<table cellspacing="1" class="tableStyle_membersWrite" summary="팝업창 추가">
+	<legend class="blind">팝업창 추가</legend>
+	  <tr>
+		<th>제목</th>
+		<td><input name="P_SUBJECT" type="text" class="wWhole"  value="<?=$P_SUBJECT?>" maxlength="50" onmouseover="this.focus()"//></td>
+	  </tr>
+	  <tr>
+		<th>팝업 사용</th>
+		<td><input name="P_POPUP_U" type="radio" value="Y" <?php if($P_POPUP_U=="Y"){ echo "checked";}?>>사용함<input name="P_POPUP_U" type="radio" value=N <?php if($P_POPUP_U=="N"){ echo "checked";}?>>사용안함</td>
+	  </tr>
+	  <tr>
+		<th>게재 기간 설정</th>
+		<td>시작일 <input name="P_STARTDAY" type="text" class="date" value="<?=$P_STARTDAY?>" maxlength="10" onclick='new Calendar().show(this);'/> 마감일 <input name="P_ENDDAY" type="text" class="date"  value="<?=$P_ENDDAY?>" maxlength="10" onclick='new Calendar().show(this);'/></td>
+	 </tr>
+	  <tr>
+		<th>위치/크기 설정</th>
+		<td>left <input name="P_WIN_LEFT" type="text" class="w60" id="x" value="<?=$P_WIN_LEFT?>" maxlength="5" onmouseover="this.focus()"//> top <input name="P_WIN_TOP" type="text" class="w60"id="y" value="<?=$P_WIN_TOP?>" maxlength="5" onmouseover="this.focus()"//> width <input name="P_WIN_WIDTH" type="text" class="w60" id="w" value="<?=$P_WIN_WIDTH?>" maxlength="5" onmouseover="this.focus()"//> height <input name="P_WIN_HEIGHT" type="text" class="w60" id="h" value="<?=$P_WIN_HEIGHT?>" maxlength="5" onmouseover="this.focus()"//></td>
+	  </tr>
+	  <tr>
+		<th>이미지</th>
+		<td><input type="file" name="P_FILE" class="w600" onkeydown="alert('열기를 클릭하여 이미지를 선택하십시오!');return false"/><?php if($act=="edit"){echo "<font color='red'>이미지 수정을 안할 경우 공백을 남겨주십시오.</font>";}?></td>
+	  </tr>
+	  <tr>
+		<th>링크 주소</td>
+		<td><input name="P_MOVEURL" type="text" class="w600" id="url" value="<?=$P_MOVEURL?>" maxlength="80" onmouseover="this.focus()"//></td>
+	  </tr>
+		<!--<tr>
+		<td align="right" valign="top">메모：</td>
+		<td><p>
+		  <textarea name="notes" style="width:300px; height:50px; font-size:12px; line-height:180%" onpropertychange="if(this.value.length>100){this.value=this.value.slice(0,100)}"></textarea>
+		  <br />
+		  (메모는 메인페이지에 뜨지않습니다.) </p></td>
+	  </tr>-->
+	  <tr>
+	  </table>
+	  
+	<div id="wrap_btn">
+		<input type="submit" name="Submit3" value="등  록" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'"  onmouseout="this.className='Qishi_submit_a'"/> <input name="submit22" type="button" class="Qishi_submit_a" onmouseover="this.className='Qishi_submit_b'"  onmouseout="this.className='Qishi_submit_a'" value="취  소" onclick="Javascript:window.history.go(-1)"/>
+		<input name="type_id" type="hidden" value="2" />
+	</div>
+	</form>
+
+</div>

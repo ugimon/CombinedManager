@@ -1,0 +1,59 @@
+							{@ gameList}
+								<form id="form_{gameList.idx}">
+									<span style="display:none">
+										<input id="param_{gameList.idx}" type="hidden" value="{gameList.idx}" game_type="{gameList.betType}" lnum="{gameList.gameIndex}"
+											home_team="{gameList.homeTeam}" home_rate="{gameList.homeRate}" draw_rate="{gameList.drawRate}" away_team="{gameList.awayTeam}"
+											away_rate="{gameList.awayRate}" >
+									</span>
+									
+									<tr>
+										<td nowrap>{gameList.gameDate}</td>
+
+										<td>
+											<p class="league">
+												<img src="upload/league/{gameList.leagueImage}" title="{gameList.league}">
+												{? mb_strlen(gameList.league, 'utf-8')<=10}
+													<span class="text">{gameList.league}</span>
+												{:}
+													<marquee class="text" scrollamount="2">{gameList.league}</marquee>
+												{/}
+											</p>
+										</td>
+										<!-- homeTeam -->
+										<td class="home" onClick=onTeamSelected('{gameList.idx}','0');return false;>
+											<div class="home">
+												<span class="name">{gameList.homeTeam}</span>
+												<span class="icon_handicap">{? gameList.betType==4}<img src='/img/icon_up.gif'>{/}</span>
+												<span class="rate">{gameList.homeRate}</span>
+											</div>
+											<input type='checkbox' value='1' style='display:none;'>
+										</td>
+
+										<!-- drawTeam -->
+										<td onClick=onTeamSelected("{gameList.idx}",'1');return false>
+										{? gameList.betType==1}
+											{? gameList.drawRate=='1.00'}
+												<b>vs</b><input type='hidden'>
+											{:}
+											<div class='draw'>
+												<span class="rate">{gameList.drawRate}</span>
+											</div>
+											{/}
+										{:}
+											<div class="draw_no"><span>{gameList.drawRate}</span></div>
+										{/}
+											<input type='checkbox' value='3' style='display:none;'>
+										</td>
+
+										<!-- awayTeam -->
+										<td class="away" onclick=onTeamSelected('{gameList.idx}','2');return false;>
+											<div class="away">
+												<span class="name">{gameList.awayTeam}</span>
+												<span class="icon_handicap">{? gameList.betType==4}<img src='/img/icon_down.gif'>{/}</span>
+												<span class="rate">{gameList.awayRate}</span>
+											</div>
+											<input type='checkbox' value='2' style='display:none;'>
+										</td>
+									</tr>
+								</form>
+								{/}

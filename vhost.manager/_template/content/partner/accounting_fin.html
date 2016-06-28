@@ -1,0 +1,63 @@
+
+<div class="wrap" id="partner_accounting_fin">
+
+	<div id="route">
+		<h5>관리자 시스템 > 파트너 관리 > <b>정산 완료</b></h5>
+	</div>
+
+	<h3>정산완료</h3>
+
+	<ul id="tab">
+		<li><a href="/partner/accounting" id="partner_accounting">정산 신청</a></li>
+		<li><a href="/partner/accounting_fin" id="partner_accounting_fin">정산 완료</a></li>
+	</ul>
+
+	<div id="search">
+		<div class="wrap">
+			<form action="?" method="GET" name="form2" id="form2">
+				<span class="icon">아이디</span>
+				<input name="date_id1" type="text" id="date_id1" class="date" value="{rec_id}" maxlength="20" />
+				<input name="Submit4" type="image" src="/img/btn_search.gif" class="imgType" title="검색" />
+			</form>
+		</div>
+	</div>
+
+	<form id="form1" name="form1" method="post" action="?act=delete_user">
+	<table cellspacing="1" class="tableStyle_normal" summary="정산 완료 목록">
+	<legend class="blind">정산 완료</legend>
+	<thead>
+		<tr>
+			<th scope="col">파트너</th>
+			<th scope="col">정산내역</th>
+			<th scope="col">정산금액</th>
+			<th scope="col">은행명</th>
+			<th scope="col">계좌번호</th>
+			<th scope="col">예금주</th>
+			<th scope="col">정산시작</th>
+			<th scope="col">정산완료</th>
+			<th scope="col">상태</th>
+		</tr>
+	</thead>
+	<tbody>
+		{@ list}
+		  <tr>
+				<td>{list.rec_id}(<font color="red">{list.rate}</font>%)</td>
+				<td>입금({=number_format(list.charge_money,0)})-출금({=number_format(list.exchange_money,0)})={=number_format(list.charge_money-.exchange_money,0)}</td>
+				<td class="accont"><span>{=number_format(.opt_money,0)}</span></td>
+				<td><span>{.bank_name}</span></td>
+				<td>{.bank_num}</td>
+				<td>{.bank_username}</td>
+				<td>{.start_date}</td>
+				<td>{.end_date}</td>
+				<td>{? .status==0}처리중{:}완료{/}</td>
+		  </tr>
+		 {/} 
+	</tbody>
+	</table>
+	</form>
+
+	<div id="pages">
+		{pagelist}
+	</div>
+
+</div>

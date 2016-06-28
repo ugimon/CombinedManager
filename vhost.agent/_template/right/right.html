@@ -1,0 +1,109 @@
+
+			<div id="bodyInfo">
+				<div class="wrap_quick" id="quick">
+					<form action="login_check.php" method="post" name="login">
+						<div id="memInfo">
+							<h3>
+								<span class="blind"><a href="index_action.htmlmemInfo">회원정보</a></span>
+								<ul>
+									<li class="user"><b><a href="/member/memolist">{sess_member_name}</a></b>님</li>
+									<li class="memo">
+										<img src="../img/icon_memo.gif" title="쪽지"><span class="new"><a href="/member/memolist">{newMemoCount}</a></span>
+										{? newMemoCount>0 }<div style='display:none;'><embed src='voice/memo_on.wav' hidden='true' volume='100'></embed></div>{/}
+									</li>
+								</ul>
+									<p class="logout"><a href="/logout"><img src="../img/btn_logout.gif" title="로그아웃"></a><!-- 로그아웃시 단독로그인 페이지로 이동합니다 --></p>
+							</h3>
+							<dl>
+								<dt>보유캐쉬</dt><dd><a href="/member/chargelist"><span id="member_cash">{=number_format(cash)}</span></a> 원</dd>
+								<dt>마일리지</dt><dd><a href="/member/mileagelist"><span id="member_mileage">{=number_format(mileage)}</span></a> <a href="#" onClick="javascript:mileage2Cash()"><img src="../img/btn_cash.gif" title="캐쉬전환"></a></dd>
+								<dt>회원등급</dt><dd>{ levelName }</dd>
+								<dt>배팅내역</dt><dd><span class="going">진행중<a href="/race/betlist?mode=1">{ingBetCount}</a>건</span><span class="all">/전체<a href="/race/betlist?mode=0">{totalBetCount}</a>건</span></dd>
+							</dl>
+							<p class="btn"><a href="/member/"><img src="/img/btn_mypage.gif" title="마이페이지"></a><a href="/member/chargelist"><img src="/img/btn_money.gif" title="캐쉬충전/입금"></a></p>
+						</div>
+					</form>
+					<form name="betForm" action="/race/bettingProcess" method=post onsubmit="return false">
+						<input type="hidden" value="betting" name="mode"> 
+						<input type="hidden" name=strgametype> 
+						<input type="hidden" name="gametype" value=<?=$$bettype?>>
+						<input type="hidden" name="result_rate"> 
+						<textarea style="display:none" name=betcontent></textarea>
+						<div id="wrap_bet">
+							<h3><img src="img/title_bet.gif" title="배팅슬립"><span><input type="checkbox" id="animate" onclick="javascript:initMoving();">슬립고정</span></h3>
+							<div id="bet">
+								<table id="tb_list" cellspacing="1" summary="배팅슬립 배팅목록" style="display:visible">
+									<caption class="blind">배팅슬립 배팅목록</caption>
+									<tbody>
+										
+									</tbody>
+								</table>
+								
+								<dl>
+									<dt>예상배당률</dt><dd><span id="sp_bet">0.00</span></dd>
+									<dt>베팅금액</dt><dd><input type="text" name="betMoney" id="betMoney" class="betMoney" value="5,000" onkeyUp="javascript:this.value=wonFormat(this.value);" onmouseover="this.focus()"></dd>
+									<dt>예상배당금</dt><dd><span id="sp_total" class="win">0</span></dd>
+								</dl>
+								<ul id="betInfo">
+									<li>베팅최소금액 : {=number_format(betMinMoney)} </li>
+									<li>베팅최대금액 : {=number_format(betMaxMoney)} </li>
+									<li>적중최대금액 : {=number_format(maxBonus)} </li>
+								</ul>
+							</div>
+							<p class="btn">
+								<a href="javascript:betting('betting')"><img src="img/bet_btn_confirm.gif" title="베팅하기"></a>
+								<a href="javascript:bet_clear()"><img src="img/bet_btn_cancle.gif" title="삭제" class="end"></a>
+							</p>
+						</div>
+					</form>
+
+					<div id="gameInfo">
+						<div id="realtime_result">
+							<h3>
+								<img src="img/title_realtime.gif" title="최근 마감경기">
+								<span>
+									<a href="javascript:pagedown()"><img src="img/game_btn_prev.gif" title="이전"></a>
+									<a href="javascript:pageup()"><img src="img/game_btn_next.gif" title="다음"></a>
+								</span>
+							</h3>
+							<div class="wrap_result">
+								<table cellspacing="0" summary="실시간 경기결과">
+									<caption class="blind">실시간 경기결과</caption>
+									<tbody>
+										<tr>
+											<td class="score">1</td>
+											<td class="score">:</td>
+											<td class="score">0</td>
+										</tr>
+										<tr>
+											<td><p class="win">LA다저스</p></td>
+											<td valign="top"><img src="img/game_icon_vs.gif" title="vs"></td>
+											<td><p class="lose">NY양키스</p></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						
+						<div id="deadline_game">
+							<h3><img src="img/title_deadline.gif" title="마감임박 경기">
+								<span>
+									<a href="javascript:pagedown()"><img src="img/game_btn_prev.gif" title="이전"></a>
+									<a href="javascript:pageup()"><img src="img/game_btn_next.gif" title="다음"></a>
+								</span>
+							</h3>
+							<ul id="recent_game_list">
+							</ul>
+						</div>
+					</div>
+
+					<div id="index_cs">
+						<h3><img src="img/index/cs_title.gif" title="24시간 고객만족센터"></h3>
+						<p class="call"><img src="img/index/cs_call.gif" title="070-7447-9245"></p>
+						<p class="btn"><a href="/cs/question"><img src="img/index/btn_inquiry.gif" title="1:1문의하기"></a><a href="/cs/faq"><img src="img/index/btn_faq.gif" title="자주 묻는 질문"></a></p>
+					</div>
+				</div>
+
+				<script type="text/javascript">initMoving(document.getElementById("quick"), 0, 150, 1000);</script>
+			</div>
+			<p class="float">.</p>

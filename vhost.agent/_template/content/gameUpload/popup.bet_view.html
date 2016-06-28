@@ -1,0 +1,56 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>합계</title>
+</head>
+<body style="font-size:12px">
+<table width="500" border="0" cellpadding="5" cellspacing="0" >
+  <tr><td align="center" class=title>{list.HomeTeam}&nbsp;&nbsp; <font color=red>VS</font>&nbsp;&nbsp; {list.AwayTeam}</td></tr>
+</table>
+
+<table width="500" border="0" cellpadding="5" cellspacing="1" bgcolor="#CCCCCC" align="center" style="font-size:12px">
+  <tr bgcolor="#F5F5F5"> 
+    <td height="25"> 
+      <div align="center"></div></td>
+    <td height="25"> 
+      <p align="center">홈팀(승)</p></td>
+    <td height="25"> 
+      <div align="center">무승부 </div></td>
+    <td height="25"> 
+      <div align="center">원정(패)</div></td>
+    <td height="25"> 
+      <div align="center">합계</div></td>
+  </tr>
+  <tr bgcolor="#FFFFFF"> 
+    <td height="25">승무패</td>
+    <td height="25" align="right">{=number_format(list.home_bet_1,0)}&nbsp;</td>
+    <td height="25" align="right">&nbsp;{=number_format(list.draw_bet,0)}&nbsp;</td>
+    <td height="25" align="right">&nbsp;{=number_format(list.away_bet_1,0)}&nbsp;</td>
+    <td height="25" align="right">&nbsp;{=number_format(list.line_1,0)}&nbsp;</td>
+  </tr>
+  <tr bgcolor="#FFFFFF"> 
+    <td height="25">핸디캡</td>
+    <td height="25" align="right">&nbsp;{=number_format(list.home_bet_2,0)}&nbsp;</td>
+    <td height="25" align="center">-</td>
+    <td height="25" align="right">&nbsp;{=number_format(list.away_bet_2,0)}&nbsp;</td>
+    <td height="25" align="right">&nbsp;{=number_format(list.line_2,0)}&nbsp;</td>
+  </tr>
+  <tr bgcolor="#FFFFFF"> 
+    <td height="25">언더오버</td>
+    <td height="25" align="right">&nbsp;{=number_format(list.home_bet_4,0)}&nbsp;</td>
+    <td height="25" align="center">-</td>
+    <td height="25" align="right">&nbsp;{=number_format(list.away_bet_4,0)}&nbsp;</td>
+    <td height="25" align="right">&nbsp;{=number_format(list.line_4,0)}&nbsp;</td>
+  </tr>
+  <tr bgcolor="#F5F5F5"> 
+    <td height="25">합계</td>
+    <td height="25" align="right">{=number_format(list.t_bet_1,0)}</td>
+    <td height="25" align="right">{=number_format(list.draw_bet,0)}</td>
+    <td height="25" align="right">{=number_format(list.t_bet_2,0)}</td>
+    <td height="25" align="right"><font color=blue>{=number_format(list.total,0)}</font></td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,36 @@
+	</head>
+	
+<body>
+
+<div id="wrap_pop">
+	<div id="pop_title">
+		<h1>가입시킨 회원정보</h1>
+	</div>
+
+	<table cellspacing="1" class="tableStyle_normal" summary="회원정보">
+	<legend class="blind">회원목록</legend>
+	<thead>
+		<tr>
+		  <th>아이디</th>
+		  <th>닉네임</th>
+		  <th>보유머니</th>
+		  <th>보유포인트</th>
+		</tr>
+	</thead>
+	<tbody>
+		{@ joiners}
+			<tr class="link_lan" style="padding-left:1px;"  onMouseOver="this.style.backgroundColor='#e0eafe';" onMouseOut="this.style.backgroundColor=''" >
+				<td title="상세정보"><a href="javascript:open_window('/member/popup_detail?idx={joiners.sn}',1024,600)">{joiners.uid}</a></td>        
+				<td>{joiners.nick}</td>
+				<td>{joiners.g_money}</td>
+				<td>{joiners.point}</td>
+			</tr>
+		{/}
+	</tbody>
+	</table>
+	<div id="pages">
+		{pagelist}
+	</div>
+
+</body>
+</html>

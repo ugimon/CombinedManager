@@ -1,0 +1,256 @@
+
+	<script>
+	function check()
+	{
+		var fm=document.frm;
+		if(fm.pwd.value !=""){
+			if(fm.pwd.value.length<6){
+				alert("비밀번호는 6자리 이상입니다");
+				fm.pwd.focus();
+				return;
+			}
+		}
+		if(fm.email.value.length!=0){
+			reg=/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+			if(!reg.test(fm.email.value)){
+				alert("이메일 격식이 틀립니다.");
+				fm.email.focus();
+				return;
+			}
+		}
+		fm.submit();
+	}
+	
+	function goSubmit() {
+		var fm=document.frm;
+		fm.submit();
+	
+		opener.document.location.reload();
+	}
+	
+	function go(url){
+		var result = confirm('정말로 전환 하시겠습니까?');
+		if(result){
+			location.href=url;
+	
+			opener.document.location.reload();
+		 
+		}
+	} 
+	
+	function del_note(member_sn, note_sn) 
+	{
+		var result = confirm('정말로 삭제 하시겠습니까?');
+		if(result)
+		{
+			location.href="/member/noteProcess?act=delete&member_sn="+member_sn+"&note_sn="+note_sn;
+		}
+	}
+	
+	function add_note(member_sn, content)
+	{
+		var fm=document.frm;
+		content = frm.content.value;
+		location.href="/member/noteProcess?act=add&member_sn="+member_sn+"&content="+content;
+	}
+	
+	function modify_note(member_sn, note_sn)
+	{
+		content = $('#content_'+note_sn).val();
+		location.href="/member/noteProcess?act=modify&member_sn="+member_sn+"&content="+content+"&note_sn="+note_sn;
+	}
+	</script>
+</head>
+<body>
+
+<div id="wrap_pop">
+	<div id="pop_title">
+		<h1>회원 상세정보</h1>
+		<p><img src="/img/btn_s_close.gif" onclick="window.close()" title="창닫기"></p>
+	</div>
+
+	<form name="frm" method="POST" action="?mode=modify">
+		<input type="hidden" name="memid" value="{list.uid}">
+		<input type="hidden" name="urlidx" value="{memberSn}">
+		<input type="hidden" name="memo" value="{list.memo}">
+		<table cellspacing="1" class="tableStyle_membersWrite" summary="회원 정보">
+		<legend class="blind">쪽지 쓰기</legend>
+			<tr>
+			  <th>아이디</th>
+			  <td>{list.uid}</td>
+			  <th>비밀번호</th>
+			  <td><input type="text" name="pwd" value="{list.upass}" class="w250"></td>
+			</tr>
+			<tr>
+			  <th>닉네임</th>
+			  <td>{list.nick}</td>
+			  <th>이름</th>
+			  <td>{list.name}</td>
+			</tr>
+			<tr>
+			  <th>보유금액</th>
+			  	<td>
+			  		{? strpos(quanxian,"1001") >= 0 && list.mem_status != 'G'}
+			  			<a href="javascript:open_window('/member/popup_moneychange?idx={list.sn}&act=money',400,250)"> {=number_format(list.g_money,0)} </a>
+			  		{:}
+			  			{=number_format(list.g_money,0)}
+			  		{/}
+			    	</td>
+			  <th>배팅금액</th>
+			  <td>{=number_format(list.bet_money,0)}원</td>
+			</tr>
+			<tr>
+			  <th>은행명</th>
+			  <td><input type="text" name="bank_name" value="{list.bank_name}" class="w250"></td>
+			  <th>예금주</th>
+			  <td><input type="text" name="bank_member" value="{list.bank_member}" class="w250"></td>
+			</tr>
+			<tr>
+			  <th>계좌번호</th>
+			  <td><input type="text" name="bank_count" value="{list.bank_account}" onKeyUp="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" class="w250"/></td>
+			  <th>환전비번</th>
+			  <td><input type="text" name="exchange_pass" value="{list.exchange_pass}" class="w250"/></td>
+			</tr>
+			
+			<tr>
+			  <th>가입일</th>
+			  <td>{list.regdate}</td>
+			  <th>로그인시간</th>
+			  <td>{list.last_date}</td>
+			</tr>
+			<tr>
+			  <th>가입아이피</th>
+			  <td>{list.reg_ip}</td>
+			  <th>로그인아이피</th>
+			  <td>[{country_code}] {list.mem_ip}</td>
+			</tr>
+			<tr>
+			  <th>가입사이트</th>
+			  <td></td>
+			  <th>총판</th>
+			  <td>
+					<select name="recommend_sn">
+						<option value="" {? list.recommend_sn==""} selected {/}>총판</option>
+					{@ partner_list}
+						<option value={.Idx} {? list.recommend_sn==.Idx} selected {/}>{.rec_id}</option>
+					{/}
+					</select>
+			  </td>
+			</tr>
+			<tr>
+			  <th>입금횟수</th>
+			  <td>{list.charge_cnt}회</td>
+			  <th>출금횟수</th>
+			  <td>{list.exchange_cnt}회</td>
+			</tr>
+			<tr>
+			  <th>입금총액</th>
+			  <td>{=number_format(list.charge_money,0)}원</td>
+			  <th>출금총액</th>
+			  <td>{=number_format(list.exchange_money,0)}원</td>
+			</tr>
+			<tr>
+			  <th>회원등급</th>
+			  <td>
+			  	<select name="mem_lev">
+			  		{@ levelList}
+			  			<option value="{levelList.lev}" {? list.mem_lev==levelList.lev} selected {/}>{levelList.lev_name}</option>	
+			  		{/}
+				</select>
+			  </td>
+			  <th>상태</th>
+			  <td>
+			  	<select name="member_status">
+			  			<!--
+				  		<option value="S" {? list.mem_status=="S"} selected {/}>정지</option>
+				  		<option value="B" {? list.mem_status=="B"} selected {/}>불량</option>
+				  		<option value="N" {? list.mem_status=="N"} selected {/}>정상</option>			  		
+				  		<option value="D" {? list.mem_status=="D"} selected {/}>탈퇴</option>		
+				  		<option value="W" {? list.mem_status=="W"} selected {/}>신규</option>
+				  		<option value="G" {? list.mem_status=="G"} selected {/}>테스터</option>
+				  		-->
+				  		<option value="S" {? list.mem_status=="S"} selected {/}>정지</option>
+				  		<option value="N" {? list.mem_status=="N"} selected {/}>정상</option>			  		
+				  		<option value="G" {? list.mem_status=="G"} selected {/}>테스터</option>
+			  	</select>
+			  </td>
+			</tr>
+			<tr>
+			  <th>이메일</th>
+			  <td><input type="text" name="email" value="{list.email}" class="w250"></td>
+			  <th>핸드폰</th>
+			  <td><input type="text" name="phone" value="{list.phone}" class="w250" size="15" maxlength="12" onKeyUp="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))"></td>
+			</tr>
+			<tr>
+			  <th>회원수익</th>
+			  <td>{=number_format(list.benefit,0)}원</td>
+			  <th>추천인</th>
+			  <td>{joiner_id}</td>
+			</tr>
+			<tr>
+			  <th>가입시킨 회원(추천인)</th>
+			  <td>
+			  	<!--
+			  		<select>
+			  			{? sizeof(joiners)>0}
+				  			{@joiners}
+				  				<option>{.uid}</option>
+				  			{/}
+				  		{:}
+				  		<option>없음</option>
+			  			{/}
+			  		</select>
+			  	-->
+			  		<input type="button" onclick="javascript:open_window('/member/popup_joiners?sn={list.sn}',1000,600)" value="세부정보" class="btnStyle1">
+			  		
+			  </td>
+			</tr>
+			<tr>
+			  <th>메모</th>
+			  <td colspan="3">
+					<table border="0" class="tableStyle_memo">
+						<tr>
+							<th>시간</th>
+							<th>내용</th>
+							<th>처리</th>
+						</tr>
+						<tr>
+							<td></td>
+							<td><input type='text' size='80' name='content'></td>
+							<td><a href="javascript:add_note({memberSn});void(0);">[추가]</a></td>
+								
+						</tr>
+						{@ memoList}
+							<tr>
+								<td>{memoList.regdate}</td>
+								<td><input type='text' size='80' id='content_{memoList.sn}' value='{memoList.memo}'></td>
+								<td width="10%">
+									<a href="javascript:modify_note({memberSn},{memoList.sn});void(0);">[수정]</a>&nbsp;&nbsp;
+									<a href="javascript:del_note({memberSn},{memoList.sn});void(0);">[삭제]</a>
+								</td>
+							</tr>
+						{/}
+					</table>
+			  </td>
+			</tr>
+		</table>
+		<div id="wrap_btn">
+			<input type="button" onclick="javascript:open_window('/member/popup_moneychange?idx={list.sn}&act=money',400,250)" value="충/환전" class="btnStyle1">
+			<input type="button" onclick="javascript:open_window('/log/popup_moneyloglist?field=uid&uid={list.uid}',1000,600)" value="머니내역" class="btnStyle1">
+			<input type="button" onclick="javascript:open_window('/log/popup_mileageloglist?field=uid&uid={list.uid}',1000,600)" value="마일리지내역" class="btnStyle1">
+			<input type="button" onclick="javascript:open_window('/charge/popup_charge?field=uid&mem_id={list.uid}',1000,600)" value="입금내역" class="btnStyle1">
+			<input type="button" onclick="javascript:open_window('/exchange/popup_exchange?field=uid&member_sn={list.sn}',1000,600)" value="출금내역" class="btnStyle1">
+			<input type="button" onclick="javascript:open_window('/member/popup_bet?mem_sn={memberSn}','1400',600)" value="배팅내역" class="btnStyle1">
+			<input type="button" onclick="javascript:open_window('/member/popup_live_game_betting_list?mem_sn={memberSn}','1400',600)" value="라이브배팅" class="btnStyle1">
+			<input type="button" onclick="javascript:open_window('/member/popup_loginlist?field=member_id&username={list.uid}',1000,600)" value="접속기록" class="btnStyle1">
+			<!--<input type="button" value="메모쓰기" onclick="javascript:open_window('/member/popup_notewrite?idx={memberSn}',700,500)" class="btnStyle1">-->
+			<input type="button" value="쪽지함" onclick="javascript:open_window('/memo/popup_memo?username={list.uid}',700,500)" class="btnStyle1">
+			<input type="button" value="쪽지쓰기" onclick="javascript:open_window('/memo/popup_write?userid={list.uid}&phone={list.phone}',650,300)" class="btnStyle1">			
+			<input type="button" value="수정" onClick="goSubmit()" class="btnStyle1">
+			<input type="button" onclick="window.close()" value="닫기" class="btnStyle2">
+		</div>
+	</form>
+</div>
+
+</body>
+</html>
